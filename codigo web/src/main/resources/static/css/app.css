@@ -1,0 +1,37 @@
+:root {
+    --vvv-primary: #0d4f8b;
+    --vvv-accent: #1789c4;
+}
+
+body {
+    background: #f5f7fa;
+}
+
+.vvv-navbar {
+    background: var(--vvv-primary);
+}
+
+.vvv-hero {
+    background: linear-gradient(135deg, var(--vvv-primary), var(--vvv-accent));
+    padding-bottom: 60px;
+}
+
+.btn-primary {
+    background-color: var(--vvv-primary);
+    border-color: var(--vvv-primary);
+}
+
+.btn-primary:hover {
+    background-color: var(--vvv-accent);
+    border-color: var(--vvv-accent);
+}
+
+.vvv-ticket {
+    border: 2px dashed var(--vvv-accent);
+    border-radius: 12px;
+}
+
+@media print {
+    .vvv-navbar, .d-print-none { display: none !important; }
+    body { background: #fff; }
+}
