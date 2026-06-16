@@ -9,7 +9,8 @@
 <div th:replace="~{fragments/nav :: nav}"></div>
 <main class="container my-4">
     <h1 class="h4 mb-3">Pontos de Venda e Vínculos <small class="text-muted">(RF17 / RF18)</small></h1>
-    <div th:if="${msgSucesso}" class="alert alert-success" th:text="${msgSucesso}"></div>
+    <div th:if="${msgSucesso}" class="alert alert-success" role="alert" th:text="${msgSucesso}"></div>
+    <div th:if="${msgErro}" class="alert alert-danger" role="alert" th:text="${msgErro}"></div>
 
     <!-- Cadastro de PDV -->
     <div class="card mb-4">
@@ -17,16 +18,16 @@
         <div class="card-body">
             <form th:action="@{/admin/pontos}" method="post" class="row g-2 align-items-end">
                 <div class="col-md-2">
-                    <label class="form-label">CNPJ</label>
-                    <input name="cnpj" class="form-control" maxlength="14" placeholder="Somente dígitos" required>
+                    <label for="p-cnpj" class="form-label">CNPJ</label>
+                    <input id="p-cnpj" name="cnpj" class="form-control" maxlength="14" placeholder="Somente dígitos" required>
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label">Nome</label>
-                    <input name="nome" class="form-control" required>
+                    <label for="p-nome" class="form-label">Nome</label>
+                    <input id="p-nome" name="nome" class="form-control" required>
                 </div>
                 <div class="col-md-2">
-                    <label class="form-label">Gerente responsável</label>
-                    <select name="idGerente" class="form-select">
+                    <label for="p-gerente" class="form-label">Gerente responsável</label>
+                    <select id="p-gerente" name="idGerente" class="form-select">
                         <option value="">Sem gerente</option>
                         <option th:each="f : ${funcionarios}"
                                 th:if="${f.tipo.name() == 'GERENTE_PDV'}"
@@ -34,12 +35,12 @@
                     </select>
                 </div>
                 <div class="col-md-2">
-                    <label class="form-label">Cidade</label>
-                    <input name="cidadeEndereco" class="form-control">
+                    <label for="p-cidade" class="form-label">Cidade</label>
+                    <input id="p-cidade" name="cidadeEndereco" class="form-control">
                 </div>
                 <div class="col-md-1">
-                    <label class="form-label">UF</label>
-                    <input name="estadoEndereco" class="form-control" maxlength="2">
+                    <label for="p-uf" class="form-label">UF</label>
+                    <input id="p-uf" name="estadoEndereco" class="form-control" maxlength="2">
                 </div>
                 <div class="col-md-2 d-grid mt-4">
                     <button class="btn btn-primary">Cadastrar PDV</button>
@@ -74,23 +75,23 @@
         <div class="card-body">
             <form th:action="@{/admin/pontos/vincular}" method="post" class="row g-2 align-items-end">
                 <div class="col-md-4">
-                    <label class="form-label">Funcionário</label>
-                    <select name="idFuncionario" class="form-select" required>
+                    <label for="v-funcionario" class="form-label">Funcionário</label>
+                    <select id="v-funcionario" name="idFuncionario" class="form-select" required>
                         <option value="">Selecione...</option>
                         <option th:each="f : ${funcionarios}" th:value="${f.id}"
                                 th:text="${f.nome + ' (' + f.tipo + ')'}"></option>
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Ponto de venda</label>
-                    <select name="idPonto" class="form-select" required>
+                    <label for="v-ponto" class="form-label">Ponto de venda</label>
+                    <select id="v-ponto" name="idPonto" class="form-select" required>
                         <option value="">Selecione...</option>
                         <option th:each="p : ${pontos}" th:value="${p.id}" th:text="${p.nome}"></option>
                     </select>
                 </div>
                 <div class="col-md-2">
-                    <label class="form-label">Data início</label>
-                    <input name="dataInicio" type="date" class="form-control">
+                    <label for="v-data" class="form-label">Data início</label>
+                    <input id="v-data" name="dataInicio" type="date" class="form-control">
                 </div>
                 <div class="col-md-2 d-grid mt-4">
                     <button class="btn btn-success">Vincular</button>

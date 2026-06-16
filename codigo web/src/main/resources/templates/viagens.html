@@ -13,13 +13,13 @@
 <main class="container my-4">
     <h1 class="h4 mb-3">Viagens disponíveis</h1>
 
-    <div th:if="${msgSucesso}" class="alert alert-success" th:text="${msgSucesso}"></div>
-    <div th:if="${msgErro}" class="alert alert-danger" th:text="${msgErro}"></div>
+    <div th:if="${msgSucesso}" class="alert alert-success" role="alert" th:text="${msgSucesso}"></div>
+    <div th:if="${msgErro}" class="alert alert-danger" role="alert" th:text="${msgErro}"></div>
 
     <!-- Filtro rápido -->
     <form th:action="@{/viagens}" th:object="${busca}" method="get" class="row g-2 align-items-end mb-4">
         <div class="col-md-4">
-            <label class="form-label">Origem</label>
+            <label for="origem" class="form-label">Origem</label>
             <select th:field="*{origem}" class="form-select form-select-sm">
                 <option value="">Qualquer</option>
                 <option th:each="c : ${cidades}" th:value="${c.identificador}"
@@ -27,7 +27,7 @@
             </select>
         </div>
         <div class="col-md-4">
-            <label class="form-label">Destino</label>
+            <label for="destino" class="form-label">Destino</label>
             <select th:field="*{destino}" class="form-select form-select-sm">
                 <option value="">Qualquer</option>
                 <option th:each="c : ${cidades}" th:value="${c.identificador}"
@@ -35,7 +35,7 @@
             </select>
         </div>
         <div class="col-md-3">
-            <label class="form-label">Data</label>
+            <label for="data" class="form-label">Data</label>
             <input type="date" th:field="*{data}" class="form-control form-control-sm">
         </div>
         <div class="col-md-1 d-grid">
@@ -55,14 +55,13 @@
         <table class="table table-hover align-middle">
             <thead class="table-light">
             <tr>
-                <th>Rota</th>
-                <th>Trecho</th>
-                <th>Data</th>
-                <th>Modal</th>
-                <th>Vagas</th>
-                <th class="text-end">Valor</th>
-                <th>Reservar para</th>
-                <th></th>
+                <th scope="col">Rota</th>
+                <th scope="col">Trecho</th>
+                <th scope="col">Data</th>
+                <th scope="col">Modal</th>
+                <th scope="col">Vagas</th>
+                <th scope="col" class="text-end">Valor</th>
+                <th scope="col" colspan="2">Reservar para</th>
             </tr>
             </thead>
             <tbody>
@@ -87,6 +86,7 @@
                     <form th:action="@{/reserva/nova}" method="post" class="d-flex gap-2">
                         <input type="hidden" name="idProgramacao" th:value="${v.idProgramacao}">
                         <select name="idPassageiro" class="form-select form-select-sm" required
+                                aria-label="Selecionar passageiro para reservar"
                                 th:disabled="${passageiros.isEmpty()}">
                             <option value="">Selecione...</option>
                             <option th:each="p : ${passageiros}" th:value="${p.id}"

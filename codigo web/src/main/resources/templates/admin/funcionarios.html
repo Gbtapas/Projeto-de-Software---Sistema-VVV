@@ -9,37 +9,46 @@
 <div th:replace="~{fragments/nav :: nav}"></div>
 <main class="container my-4">
     <h1 class="h4 mb-3">Gestão de Funcionários <small class="text-muted">(RF16)</small></h1>
-    <div th:if="${msgSucesso}" class="alert alert-success" th:text="${msgSucesso}"></div>
+    <div th:if="${msgSucesso}" class="alert alert-success" role="alert" th:text="${msgSucesso}"></div>
+    <div th:if="${msgErro}" class="alert alert-danger" role="alert" th:text="${msgErro}"></div>
 
     <!-- Formulário de cadastro -->
     <form th:action="@{/admin/funcionarios}" method="post" class="row g-2 align-items-end mb-4 border rounded p-3 bg-light">
         <h2 class="h6 mb-2">Novo funcionário</h2>
         <div class="col-md-2">
-            <label class="form-label">CPF</label>
-            <input name="cpf" class="form-control" maxlength="11" placeholder="Somente dígitos" required>
-        </div>
-        <div class="col-md-3">
-            <label class="form-label">Nome</label>
-            <input name="nome" class="form-control" required>
+            <label for="f-cpf" class="form-label">CPF</label>
+            <input id="f-cpf" name="cpf" class="form-control" maxlength="11" placeholder="Somente dígitos" required>
         </div>
         <div class="col-md-2">
-            <label class="form-label">Tipo</label>
-            <select name="tipo" class="form-select" required>
+            <label for="f-nome" class="form-label">Nome</label>
+            <input id="f-nome" name="nome" class="form-control" required>
+        </div>
+        <div class="col-md-2">
+            <label for="f-tipo" class="form-label">Tipo</label>
+            <select id="f-tipo" name="tipo" class="form-select" required>
                 <option value="">Selecione...</option>
                 <option th:each="t : ${tipos}" th:value="${t}" th:text="${t}"></option>
             </select>
         </div>
+        <div class="col-md-1">
+            <label for="f-cidade" class="form-label">Cidade</label>
+            <input id="f-cidade" name="cidadeEndereco" class="form-control">
+        </div>
+        <div class="col-md-1">
+            <label for="f-estado" class="form-label">Estado</label>
+            <input id="f-estado" name="estadoEndereco" class="form-control" maxlength="2" placeholder="UF">
+        </div>
+        <div class="col-md-1">
+            <label for="f-cep" class="form-label">CEP</label>
+            <input id="f-cep" name="cep" class="form-control" maxlength="8" placeholder="Dígitos">
+        </div>
         <div class="col-md-2">
-            <label class="form-label">Cidade</label>
-            <input name="cidadeEndereco" class="form-control">
+            <label for="f-email" class="form-label">E-mail (login)</label>
+            <input id="f-email" name="email" type="email" class="form-control" required>
         </div>
-        <div class="col-md-1">
-            <label class="form-label">Estado</label>
-            <input name="estadoEndereco" class="form-control" maxlength="2" placeholder="UF">
-        </div>
-        <div class="col-md-1">
-            <label class="form-label">CEP</label>
-            <input name="cep" class="form-control" maxlength="8" placeholder="Dígitos">
+        <div class="col-md-2">
+            <label for="f-senha" class="form-label">Senha</label>
+            <input id="f-senha" name="senha" type="password" class="form-control" required minlength="6">
         </div>
         <div class="col-md-1 d-grid mt-4">
             <button class="btn btn-primary">Cadastrar</button>

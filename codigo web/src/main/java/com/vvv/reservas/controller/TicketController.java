@@ -26,4 +26,11 @@ public class TicketController {
                 pagamentoService.buscarPagamentoDaReserva(ticket.getReserva().getId()));
         return "ticket";
     }
+
+    /** Busca ticket pelo ID da reserva — usado pelo link "Ver ticket" em Minhas Reservas. */
+    @GetMapping("/ticket/reserva/{idReserva}")
+    public String ticketPorReserva(@PathVariable Long idReserva) {
+        Ticket ticket = pagamentoService.buscarTicketDaReserva(idReserva);
+        return "redirect:/ticket/" + ticket.getId();
+    }
 }

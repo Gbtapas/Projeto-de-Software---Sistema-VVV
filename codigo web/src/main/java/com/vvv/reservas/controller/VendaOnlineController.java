@@ -1,6 +1,7 @@
 package com.vvv.reservas.controller;
 
 import com.vvv.reservas.dto.SupervisaoItem;
+import com.vvv.reservas.service.RegraNegocioException;
 import com.vvv.reservas.service.VendaService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,8 +34,12 @@ public class VendaOnlineController {
     @PostMapping("/{idReserva}/decidir")
     public String decidir(@PathVariable Long idReserva, @RequestParam boolean aprovar,
                           Principal principal, RedirectAttributes ra) {
-        vendaService.supervisionarOnline(idReserva, aprovar, principal.getName());
-        ra.addFlashAttribute("msgSucesso", aprovar ? "Venda aprovada." : "Venda recusada e reserva cancelada.");
+        try {
+            vendaService.supervisionarOnline(idReserva, aprovar, principal.getName());
+            ra.addFlashAttribute("msgSucesso", aprovar ? "Venda aprovada." : "Venda recusada e reserva cancelada.");
+        } catch (RegraNegocioException e) {
+            ra.addFlashAttribute("msgErro", e.getMessage());
+        }
         return "redirect:/vendas/online";
     }
 }

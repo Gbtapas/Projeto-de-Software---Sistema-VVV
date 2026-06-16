@@ -3,31 +3,40 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark vvv-navbar" th:fragment="nav">
     <div class="container">
-        <a class="navbar-brand fw-bold" th:href="@{/}">✈ Vai&amp;Volta Viagens</a>
-        <div class="navbar-nav me-auto">
-            <a class="nav-link" th:href="@{/}">Buscar viagens</a>
-            <a class="nav-link" th:href="@{/viagens}">Todas as viagens</a>
-            <a class="nav-link" th:href="@{/passageiro/novo}">Cadastrar passageiro</a>
-            <a class="nav-link" th:if="${usuarioLogado != null}" th:href="@{/minhas-reservas}">Minhas reservas</a>
+        <a class="navbar-brand fw-bold" th:href="@{/}" aria-label="Vai&amp;Volta Viagens — página inicial">
+            <span aria-hidden="true">✈</span> Vai&amp;Volta Viagens
+        </a>
+        <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse" data-bs-target="#navMenu"
+                aria-controls="navMenu" aria-expanded="false" aria-label="Abrir menu de navegação">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navMenu">
+            <div class="navbar-nav me-auto">
+                <a class="nav-link" th:href="@{/}">Buscar viagens</a>
+                <a class="nav-link" th:href="@{/viagens}">Todas as viagens</a>
+                <a class="nav-link" th:href="@{/passageiro/novo}">Cadastrar passageiro</a>
+                <a class="nav-link" th:if="${usuarioLogado != null}" th:href="@{/minhas-reservas}">Minhas reservas</a>
 
-            <!-- Menus por papel -->
-            <a class="nav-link" th:if="${papeis != null and (papeis.contains('ROLE_ADMIN') or papeis.contains('ROLE_GERENTE_PDV'))}"
-               th:href="@{/admin}">Administração</a>
-            <a class="nav-link" th:if="${papeis != null and papeis.contains('ROLE_ADMIN')}"
-               th:href="@{/admin/funcionarios}">Funcionários</a>
-            <a class="nav-link" th:if="${papeis != null and papeis.contains('ROLE_GERENTE_VIRTUAL')}"
-               th:href="@{/vendas/online}">Vendas online</a>
-            <a class="nav-link" th:if="${papeis != null and papeis.contains('ROLE_FUNCIONARIO')}"
-               th:href="@{/vendas/presencial}">Venda presencial</a>
-        </div>
+                <!-- Menus por papel -->
+                <a class="nav-link" th:if="${papeis != null and (papeis.contains('ROLE_ADMIN') or papeis.contains('ROLE_GERENTE_PDV'))}"
+                   th:href="@{/admin}">Administração</a>
+                <a class="nav-link" th:if="${papeis != null and papeis.contains('ROLE_ADMIN')}"
+                   th:href="@{/admin/funcionarios}">Funcionários</a>
+                <a class="nav-link" th:if="${papeis != null and papeis.contains('ROLE_GERENTE_VIRTUAL')}"
+                   th:href="@{/vendas/online}">Vendas online</a>
+                <a class="nav-link" th:if="${papeis != null and papeis.contains('ROLE_FUNCIONARIO')}"
+                   th:href="@{/vendas/presencial}">Venda presencial</a>
+            </div>
 
-        <div class="navbar-nav">
-            <span class="navbar-text text-white-50 me-3" th:if="${usuarioLogado != null}"
-                  th:text="${usuarioLogado}">usuário</span>
-            <a class="nav-link" th:if="${usuarioLogado == null}" th:href="@{/login}">Entrar</a>
-            <form th:if="${usuarioLogado != null}" th:action="@{/logout}" method="post" class="d-inline">
-                <button type="submit" class="btn btn-sm btn-outline-light">Sair</button>
-            </form>
+            <div class="navbar-nav">
+                <span class="navbar-text text-white-50 me-3" th:if="${usuarioLogado != null}"
+                      th:text="${usuarioLogado}">usuário</span>
+                <a class="nav-link" th:if="${usuarioLogado == null}" th:href="@{/login}">Entrar</a>
+                <form th:if="${usuarioLogado != null}" th:action="@{/logout}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-sm btn-outline-light">Sair</button>
+                </form>
+            </div>
         </div>
     </div>
 </nav>

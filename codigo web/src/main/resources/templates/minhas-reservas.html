@@ -13,8 +13,14 @@
 <main class="container my-4">
     <h1 class="h4 mb-3">Minhas reservas</h1>
 
-    <div th:if="${sucesso}" class="alert alert-success alert-dismissible" th:text="${sucesso}"></div>
-    <div th:if="${erro}" class="alert alert-danger alert-dismissible" th:text="${erro}"></div>
+    <div th:if="${sucesso}" class="alert alert-success alert-dismissible" role="alert">
+        <span th:text="${sucesso}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+    </div>
+    <div th:if="${erro}" class="alert alert-danger alert-dismissible" role="alert">
+        <span th:text="${erro}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+    </div>
 
     <div th:if="${reservas.isEmpty()}" class="alert alert-info">
         Nenhuma reserva encontrada para o seu cadastro.
@@ -25,14 +31,14 @@
         <table class="table table-hover align-middle">
             <thead class="table-light">
             <tr>
-                <th>Código</th>
-                <th>Data da reserva</th>
-                <th>Rota</th>
-                <th>Data da viagem</th>
-                <th>Modal</th>
-                <th>Status</th>
-                <th class="text-end">Valor total</th>
-                <th></th>
+                <th scope="col">Código</th>
+                <th scope="col">Data da reserva</th>
+                <th scope="col">Rota</th>
+                <th scope="col">Data da viagem</th>
+                <th scope="col">Modal</th>
+                <th scope="col">Status</th>
+                <th scope="col" class="text-end">Valor total</th>
+                <th scope="col" aria-label="Ações"></th>
             </tr>
             </thead>
             <tbody>
@@ -57,7 +63,8 @@
                     th:text="${'R$ ' + #numbers.formatDecimal(r.valorTotal, 1, 'POINT', 2, 'COMMA')}"></td>
                 <td class="d-flex gap-1">
                     <a class="btn btn-sm btn-outline-primary"
-                       th:href="@{/ticket/{id}(id=${r.id})}">Ver ticket</a>
+                       th:if="${r.status.name() == 'CONFIRMADA'}"
+                       th:href="@{/ticket/reserva/{id}(id=${r.id})}">Ver ticket</a>
                     <form th:if="${r.status.name() != 'CANCELADA'}"
                           th:action="@{/minhas-reservas/{id}/cancelar(id=${r.id})}" method="post"
                           onsubmit="return confirm('Tem certeza que deseja cancelar esta reserva?')">

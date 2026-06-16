@@ -11,13 +11,13 @@ import java.util.List;
 /** Consulta de viagens disponíveis (UC02) sobre a view vw_programacoes_disponiveis. */
 public interface ProgramacaoDisponivelRepository extends JpaRepository<ProgramacaoDisponivel, Integer> {
 
-    @Query("""
-            SELECT p FROM ProgramacaoDisponivel p
-            WHERE (:origem  IS NULL OR p.codOrigem  = :origem)
-              AND (:destino IS NULL OR p.codDestino = :destino)
-              AND (:data    IS NULL OR p.dataViagem = :data)
-            ORDER BY p.dataViagem ASC, p.valorBase ASC
-            """)
+    @Query(value = """
+            SELECT * FROM vw_programacoes_disponiveis
+            WHERE (:origem  IS NULL OR cod_origem  = :origem)
+              AND (:destino IS NULL OR cod_destino = :destino)
+              AND (:data    IS NULL OR data_viagem = :data)
+            ORDER BY data_viagem ASC, valor_base ASC
+            """, nativeQuery = true)
     List<ProgramacaoDisponivel> buscar(@Param("origem") String origem,
                                        @Param("destino") String destino,
                                        @Param("data") LocalDate data);

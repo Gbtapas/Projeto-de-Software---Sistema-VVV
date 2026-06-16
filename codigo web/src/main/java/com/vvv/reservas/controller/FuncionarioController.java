@@ -3,6 +3,7 @@ package com.vvv.reservas.controller;
 import com.vvv.reservas.dto.FuncionarioForm;
 import com.vvv.reservas.model.enums.TipoFuncionario;
 import com.vvv.reservas.service.FuncionarioService;
+import com.vvv.reservas.service.RegraNegocioException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,15 +29,23 @@ public class FuncionarioController {
 
     @PostMapping
     public String salvar(@ModelAttribute FuncionarioForm form, RedirectAttributes ra) {
-        funcionarioService.salvar(form);
-        ra.addFlashAttribute("msgSucesso", "Funcionário cadastrado com sucesso.");
+        try {
+            funcionarioService.salvar(form);
+            ra.addFlashAttribute("msgSucesso", "Funcionário cadastrado com sucesso.");
+        } catch (RegraNegocioException e) {
+            ra.addFlashAttribute("msgErro", e.getMessage());
+        }
         return "redirect:/admin/funcionarios";
     }
 
     @PostMapping("/{id}/desativar")
     public String desativar(@PathVariable Long id, RedirectAttributes ra) {
-        funcionarioService.desativar(id);
-        ra.addFlashAttribute("msgSucesso", "Funcionário desativado.");
+        try {
+            funcionarioService.desativar(id);
+            ra.addFlashAttribute("msgSucesso", "Funcionário desativado.");
+        } catch (RegraNegocioException e) {
+            ra.addFlashAttribute("msgErro", e.getMessage());
+        }
         return "redirect:/admin/funcionarios";
     }
 }

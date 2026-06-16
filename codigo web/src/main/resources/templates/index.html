@@ -23,7 +23,7 @@
             <h2 class="h5 mb-3">Buscar viagens disponíveis</h2>
             <form th:action="@{/viagens}" th:object="${busca}" method="get" class="row g-3 align-items-end">
                 <div class="col-md-4">
-                    <label class="form-label">Origem</label>
+                    <label for="origem" class="form-label">Origem</label>
                     <select th:field="*{origem}" class="form-select">
                         <option value="">Qualquer origem</option>
                         <option th:each="c : ${cidades}"
@@ -32,7 +32,7 @@
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <label class="form-label">Destino</label>
+                    <label for="destino" class="form-label">Destino</label>
                     <select th:field="*{destino}" class="form-select">
                         <option value="">Qualquer destino</option>
                         <option th:each="c : ${cidades}"
@@ -41,7 +41,7 @@
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label">Data (opcional)</label>
+                    <label for="data" class="form-label">Data (opcional)</label>
                     <input type="date" th:field="*{data}" class="form-control">
                 </div>
                 <div class="col-md-1 d-grid">

@@ -57,6 +57,9 @@ public class ReservaService {
         Reserva reserva = reservaRepository.findById(id)
                 .orElseThrow(() -> new RegraNegocioException("Reserva não encontrada."));
 
+        if (!reservaRepository.existsByIdAndPassageiro_Cliente_Usuario_Email(id, emailUsuario))
+            throw new RegraNegocioException("Você não tem permissão para cancelar esta reserva.");
+
         if (reserva.getStatus() == StatusReserva.CANCELADA)
             throw new RegraNegocioException("Esta reserva já está cancelada.");
 

@@ -16,56 +16,56 @@
     <form th:action="@{/passageiro/novo}" th:object="${passageiroForm}" method="post" novalidate>
         <div class="row g-3">
             <div class="col-md-6">
-                <label class="form-label">Nome *</label>
+                <label for="nome" class="form-label">Nome *</label>
                 <input type="text" th:field="*{nome}" class="form-control"
                        th:classappend="${#fields.hasErrors('nome')} ? 'is-invalid'">
                 <div class="invalid-feedback" th:errors="*{nome}"></div>
             </div>
             <div class="col-md-3">
-                <label class="form-label">CPF * <small class="text-muted">(11 dígitos)</small></label>
+                <label for="cpf" class="form-label">CPF * <small class="text-muted">(11 dígitos)</small></label>
                 <input type="text" th:field="*{cpf}" class="form-control" maxlength="11"
                        th:classappend="${#fields.hasErrors('cpf')} ? 'is-invalid'">
                 <div class="invalid-feedback" th:errors="*{cpf}"></div>
             </div>
             <div class="col-md-3">
-                <label class="form-label">Nascimento *</label>
+                <label for="dataNascimento" class="form-label">Nascimento *</label>
                 <input type="date" th:field="*{dataNascimento}" class="form-control"
                        th:classappend="${#fields.hasErrors('dataNascimento')} ? 'is-invalid'">
                 <div class="invalid-feedback" th:errors="*{dataNascimento}"></div>
             </div>
 
             <div class="col-md-6">
-                <label class="form-label">Telefone</label>
+                <label for="telefone" class="form-label">Telefone</label>
                 <input type="text" th:field="*{telefone}" class="form-control">
             </div>
             <div class="col-md-6">
-                <label class="form-label">Profissão</label>
+                <label for="profissao" class="form-label">Profissão</label>
                 <input type="text" th:field="*{profissao}" class="form-control">
             </div>
 
             <div class="col-12"><hr><h2 class="h6 text-muted">Endereço (opcional)</h2></div>
             <div class="col-md-8">
-                <label class="form-label">Rua</label>
+                <label for="rua" class="form-label">Rua</label>
                 <input type="text" th:field="*{rua}" class="form-control">
             </div>
             <div class="col-md-4">
-                <label class="form-label">Número</label>
+                <label for="numero" class="form-label">Número</label>
                 <input type="text" th:field="*{numero}" class="form-control">
             </div>
             <div class="col-md-4">
-                <label class="form-label">Bairro</label>
+                <label for="bairro" class="form-label">Bairro</label>
                 <input type="text" th:field="*{bairro}" class="form-control">
             </div>
             <div class="col-md-4">
-                <label class="form-label">Cidade</label>
+                <label for="cidadeEndereco" class="form-label">Cidade</label>
                 <input type="text" th:field="*{cidadeEndereco}" class="form-control">
             </div>
             <div class="col-md-2">
-                <label class="form-label">UF</label>
+                <label for="estadoEndereco" class="form-label">UF</label>
                 <input type="text" th:field="*{estadoEndereco}" class="form-control" maxlength="2">
             </div>
             <div class="col-md-2">
-                <label class="form-label">CEP</label>
+                <label for="cep" class="form-label">CEP</label>
                 <input type="text" th:field="*{cep}" class="form-control" maxlength="8">
             </div>
         </div>

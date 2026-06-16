@@ -28,4 +28,6 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
            "WHERE p.cliente.usuario.email = :email " +
            "ORDER BY r.dataCriacao DESC")
     List<Reserva> findMinhasReservas(@Param("email") String email);
+
+    boolean existsByIdAndPassageiro_Cliente_Usuario_Email(Long id, String email);
 }

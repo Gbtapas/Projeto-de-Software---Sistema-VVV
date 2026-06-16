@@ -9,32 +9,32 @@
 <div th:replace="~{fragments/nav :: nav}"></div>
 <main class="container my-4" style="max-width:780px;">
     <h1 class="h4 mb-3">Venda presencial <small class="text-muted">(RF13 / RN29)</small></h1>
-    <div th:if="${msgErro}" class="alert alert-danger" th:text="${msgErro}"></div>
+    <div th:if="${msgErro}" class="alert alert-danger" role="alert" th:text="${msgErro}"></div>
 
-    <div th:if="${passageiros.isEmpty()}" class="alert alert-warning">
+    <div th:if="${passageiros.isEmpty()}" class="alert alert-warning" role="alert">
         Nenhum passageiro cadastrado. <a th:href="@{/passageiro/novo}">Cadastre um</a> primeiro.
     </div>
 
     <form th:action="@{/vendas/presencial}" method="post" class="card card-body">
         <div class="mb-3">
-            <label class="form-label">Viagem</label>
-            <select name="idProgramacao" class="form-select" required>
+            <label for="idProgramacao" class="form-label">Viagem</label>
+            <select id="idProgramacao" name="idProgramacao" class="form-select" required>
                 <option value="">Selecione...</option>
                 <option th:each="v : ${viagens}" th:value="${v.idProgramacao}"
                         th:text="${v.descricaoRota + ' — ' + #temporals.format(v.dataViagem,'dd/MM/yyyy') + ' — R$ ' + #numbers.formatDecimal(v.valorBase,1,'POINT',2,'COMMA')}"></option>
             </select>
         </div>
         <div class="mb-3">
-            <label class="form-label">Passageiro</label>
-            <select name="idPassageiro" class="form-select" required th:disabled="${passageiros.isEmpty()}">
+            <label for="idPassageiro" class="form-label">Passageiro</label>
+            <select id="idPassageiro" name="idPassageiro" class="form-select" required th:disabled="${passageiros.isEmpty()}">
                 <option value="">Selecione...</option>
                 <option th:each="p : ${passageiros}" th:value="${p.id}"
                         th:text="${p.nome + ' — ' + p.idade + ' anos'}"></option>
             </select>
         </div>
         <div class="mb-3">
-            <label class="form-label">Ponto de venda</label>
-            <select name="idPonto" class="form-select" required>
+            <label for="idPonto" class="form-label">Ponto de venda</label>
+            <select id="idPonto" name="idPonto" class="form-select" required>
                 <option value="">Selecione...</option>
                 <option th:each="pt : ${pontos}" th:value="${pt.id}" th:text="${pt.nome}"></option>
             </select>

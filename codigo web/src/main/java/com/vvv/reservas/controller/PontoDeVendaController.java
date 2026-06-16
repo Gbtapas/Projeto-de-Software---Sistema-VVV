@@ -2,6 +2,7 @@ package com.vvv.reservas.controller;
 
 import com.vvv.reservas.service.FuncionarioService;
 import com.vvv.reservas.service.PontoDeVendaService;
+import com.vvv.reservas.service.RegraNegocioException;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,8 +42,12 @@ public class PontoDeVendaController {
                          @RequestParam(required = false) String telefone,
                          @RequestParam(required = false) Long idGerente,
                          RedirectAttributes ra) {
-        pdvService.salvar(cnpj, nome, rua, bairro, cep, cidadeEndereco, estadoEndereco, telefone, idGerente);
-        ra.addFlashAttribute("msgSucesso", "Ponto de venda cadastrado.");
+        try {
+            pdvService.salvar(cnpj, nome, rua, bairro, cep, cidadeEndereco, estadoEndereco, telefone, idGerente);
+            ra.addFlashAttribute("msgSucesso", "Ponto de venda cadastrado.");
+        } catch (RegraNegocioException e) {
+            ra.addFlashAttribute("msgErro", e.getMessage());
+        }
         return "redirect:/admin/pontos";
     }
 
@@ -50,15 +55,23 @@ public class PontoDeVendaController {
     public String vincular(@RequestParam Long idFuncionario, @RequestParam Integer idPonto,
                            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicio,
                            RedirectAttributes ra) {
-        pdvService.vincular(idFuncionario, idPonto, dataInicio);
-        ra.addFlashAttribute("msgSucesso", "Funcionário vinculado ao ponto de venda.");
+        try {
+            pdvService.vincular(idFuncionario, idPonto, dataInicio);
+            ra.addFlashAttribute("msgSucesso", "Funcionário vinculado ao ponto de venda.");
+        } catch (RegraNegocioException e) {
+            ra.addFlashAttribute("msgErro", e.getMessage());
+        }
         return "redirect:/admin/pontos";
     }
 
     @PostMapping("/{idFpv}/desvincular")
     public String desvincular(@PathVariable Long idFpv, RedirectAttributes ra) {
-        pdvService.desvincular(idFpv);
-        ra.addFlashAttribute("msgSucesso", "Vínculo encerrado.");
+        try {
+            pdvService.desvincular(idFpv);
+            ra.addFlashAttribute("msgSucesso", "Vínculo encerrado.");
+        } catch (RegraNegocioException e) {
+            ra.addFlashAttribute("msgErro", e.getMessage());
+        }
         return "redirect:/admin/pontos";
     }
 }

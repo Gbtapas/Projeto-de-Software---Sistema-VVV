@@ -42,7 +42,7 @@ public class PontoDeVenda {
     @Column(name = "ativo", nullable = false)
     private Boolean ativo = true;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_gerente")
     private Funcionario gerente;
 

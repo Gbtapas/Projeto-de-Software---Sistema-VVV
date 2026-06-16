@@ -43,13 +43,13 @@
                     <form th:action="@{/pagamento}" th:object="${pagamentoForm}" method="post">
                         <input type="hidden" th:field="*{idReserva}">
                         <div class="mb-3">
-                            <label class="form-label">Tipo</label>
+                            <label for="tipo" class="form-label">Tipo</label>
                             <select th:field="*{tipo}" id="tipo" class="form-select">
                                 <option th:each="t : ${tipos}" th:value="${t}" th:text="${t}"></option>
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Parcelas</label>
+                            <label for="parcelas" class="form-label">Parcelas</label>
                             <select th:field="*{parcelas}" id="parcelas" class="form-select">
                                 <option th:each="n : ${#numbers.sequence(1, 12)}" th:value="${n}"
                                         th:text="${n + 'x'}"></option>
