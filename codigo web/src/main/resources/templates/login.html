@@ -14,6 +14,9 @@
     <h1 class="h4 mb-3 text-center">Acesso ao sistema</h1>
 
     <div th:if="${param.error}" class="alert alert-danger">E-mail ou senha inválidos.</div>
+    <div th:if="${param.bloqueado}" class="alert alert-warning">
+        Conta bloqueada temporariamente após 3 tentativas incorretas. Tente novamente em 15 minutos.
+    </div>
     <div th:if="${param.logout}" class="alert alert-success">Sessão encerrada.</div>
 
     <div class="card shadow-sm">
@@ -36,6 +39,7 @@
         <strong>Usuários de teste</strong> (senha <code>senha123</code>):<br>
         admin@vvv.com.br · gerente.virtual@vvv.com.br · gerente.pdv1@vvv.com.br · func.joao@vvv.com.br
     </div>
+    <p class="text-center mt-3">Não tem uma conta? <a th:href="@{/signup}">Cadastre-se aqui</a></p>
     <p class="text-center mt-3"><a th:href="@{/}">Continuar como cliente (sem login)</a></p>
 </main>
 

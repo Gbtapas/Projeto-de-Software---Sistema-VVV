@@ -33,6 +33,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -174,7 +175,7 @@ class VendaServiceTest {
     void registrarPresencial_funcionarioNaoEncontrado_lancaException() {
         when(funcionarioRepo.findByUsuario_Email("func@vvv.com")).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> service.registrarPresencial(1, 1L, 1, "func@vvv.com"))
+        assertThatThrownBy(() -> service.registrarPresencial(1, 1L, null, 1, "func@vvv.com"))
                 .isInstanceOf(RegraNegocioException.class)
                 .hasMessageContaining("Funcionário");
     }
@@ -187,14 +188,14 @@ class VendaServiceTest {
         Venda vendaSalva = new Venda();
 
         when(funcionarioRepo.findByUsuario_Email("func@vvv.com")).thenReturn(Optional.of(func));
-        when(reservaService.criar(1, 1L, CanalReserva.PRESENCIAL)).thenReturn(reserva);
+        when(reservaService.criar(1, 1L, null, CanalReserva.PRESENCIAL)).thenReturn(reserva);
         when(vendaRepo.saveAndFlush(any())).thenReturn(vendaSalva);
         when(pontoRepo.getReferenceById(1)).thenReturn(new PontoDeVenda());
         when(vendaPresencialRepo.saveAndFlush(any())).thenReturn(new com.vvv.reservas.model.entity.VendaPresencial());
 
-        service.registrarPresencial(1, 1L, 1, "func@vvv.com");
+        service.registrarPresencial(1, 1L, null, 1, "func@vvv.com");
 
-        verify(reservaService).criar(eq(1), eq(1L), eq(CanalReserva.PRESENCIAL));
+        verify(reservaService).criar(eq(1), eq(1L), isNull(), eq(CanalReserva.PRESENCIAL));
         verify(auditoria).registrar(eq("vendas"), any(), eq(OperacaoAuditoria.INSERT), eq(null), anyString());
         verify(transferenciaService).transferir(any());
     }

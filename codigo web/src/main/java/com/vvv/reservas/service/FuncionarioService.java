@@ -48,6 +48,16 @@ public class FuncionarioService {
 
     @Transactional
     public Funcionario salvar(FuncionarioForm form) {
+        if (form.getCpf() == null || !form.getCpf().matches("\\d{11}"))
+            throw new RegraNegocioException("CPF deve conter exatamente 11 dígitos numéricos.");
+        if (form.getNome() == null || form.getNome().isBlank())
+            throw new RegraNegocioException("Nome do funcionário é obrigatório.");
+        if (form.getTipo() == null)
+            throw new RegraNegocioException("Tipo do funcionário é obrigatório.");
+        if (form.getEmail() == null || form.getEmail().isBlank())
+            throw new RegraNegocioException("E-mail do funcionário é obrigatório.");
+        if (form.getSenha() == null || form.getSenha().length() < 6)
+            throw new RegraNegocioException("A senha deve ter no mínimo 6 caracteres.");
         if (funcionarioRepo.existsByCpf(form.getCpf()))
             throw new RegraNegocioException("Já existe um funcionário cadastrado com este CPF.");
         if (usuarioRepo.findByEmail(form.getEmail()).isPresent())

@@ -38,6 +38,10 @@ public class ManutencaoService {
 
     @Transactional
     public void agendar(Integer idModal, LocalDate inicio, LocalDate fim, String descricao) {
+        if (inicio == null || inicio.isBefore(LocalDate.now()))
+            throw new RegraNegocioException("A data de início da manutenção não pode ser no passado.");
+        if (fim == null || fim.isBefore(inicio))
+            throw new RegraNegocioException("A data de fim da manutenção deve ser igual ou posterior à data de início.");
         try {
             Manutencao m = new Manutencao();
             m.setModal(modalRepo.getReferenceById(idModal));

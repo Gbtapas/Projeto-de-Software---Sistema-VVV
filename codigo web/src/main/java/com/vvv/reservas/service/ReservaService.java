@@ -6,6 +6,8 @@ import com.vvv.reservas.model.entity.Reserva;
 import com.vvv.reservas.model.enums.CanalReserva;
 import com.vvv.reservas.model.enums.OperacaoAuditoria;
 import com.vvv.reservas.model.enums.StatusReserva;
+import com.vvv.reservas.repository.ClienteRepository;
+import com.vvv.reservas.repository.PassageiroRepository;
 import com.vvv.reservas.repository.ProgramacaoViagemRepository;
 import com.vvv.reservas.repository.ReservaRepository;
 import com.vvv.reservas.repository.TicketRepository;
@@ -24,17 +26,23 @@ public class ReservaService {
 
     private final ReservaRepository reservaRepository;
     private final ProgramacaoViagemRepository programacaoRepository;
+    private final PassageiroRepository passageiroRepository;
+    private final ClienteRepository clienteRepository;
     private final EntityManager entityManager;
     private final AuditoriaService auditoria;
     private final TicketRepository ticketRepository;
 
     public ReservaService(ReservaRepository reservaRepository,
                           ProgramacaoViagemRepository programacaoRepository,
+                          PassageiroRepository passageiroRepository,
+                          ClienteRepository clienteRepository,
                           EntityManager entityManager,
                           AuditoriaService auditoria,
                           TicketRepository ticketRepository) {
         this.reservaRepository = reservaRepository;
         this.programacaoRepository = programacaoRepository;
+        this.passageiroRepository = passageiroRepository;
+        this.clienteRepository = clienteRepository;
         this.entityManager = entityManager;
         this.auditoria = auditoria;
         this.ticketRepository = ticketRepository;
@@ -78,7 +86,12 @@ public class ReservaService {
     }
 
     @Transactional
-    public Reserva criar(Integer idProgramacao, Long idPassageiro, CanalReserva canal) {
+    public Reserva criar(Integer idProgramacao, Long idPassageiro, Long idAcompanhante, CanalReserva canal) {
+        return criar(idProgramacao, idPassageiro, idAcompanhante, canal, null);
+    }
+
+    @Transactional
+    public Reserva criar(Integer idProgramacao, Long idPassageiro, Long idAcompanhante, CanalReserva canal, String emailUsuario) {
         ProgramacaoViagem prog = programacaoRepository.findById(idProgramacao)
                 .orElseThrow(() -> new RegraNegocioException("Viagem (programação) não encontrada."));
 
@@ -86,7 +99,23 @@ public class ReservaService {
         reserva.setCanal(canal);
         reserva.setValorBruto(prog.getValorBase());
         reserva.setProgramacao(prog);
-        reserva.setPassageiro(entityManager.getReference(Passageiro.class, idPassageiro));
+        
+        Passageiro passageiro = passageiroRepository.findById(idPassageiro)
+                .orElseThrow(() -> new RegraNegocioException("Passageiro não encontrado."));
+        reserva.setPassageiro(passageiro);
+
+        // Acompanhante obrigatório para crianças entre 2 e 10 anos (RN04).
+        // A trigger do banco também valida; setamos aqui para que o INSERT já chegue correto.
+        if (idAcompanhante != null) {
+            reserva.setAcompanhante(entityManager.getReference(Passageiro.class, idAcompanhante));
+        }
+
+        // Definir o comprador (Cliente)
+        if (emailUsuario != null) {
+            clienteRepository.findByUsuario_Email(emailUsuario).ifPresent(reserva::setComprador);
+        } else if (passageiro.getCliente() != null) {
+            reserva.setComprador(passageiro.getCliente());
+        }
 
         try {
             Reserva salva = reservaRepository.saveAndFlush(reserva);

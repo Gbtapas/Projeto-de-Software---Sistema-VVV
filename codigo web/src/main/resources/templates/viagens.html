@@ -83,17 +83,35 @@
                 <td class="text-end fw-semibold"
                     th:text="${'R$ ' + #numbers.formatDecimal(v.valorBase, 1, 'POINT', 2, 'COMMA')}"></td>
                 <td colspan="2">
-                    <form th:action="@{/reserva/nova}" method="post" class="d-flex gap-2">
+                    <form th:action="@{/reserva/nova}" method="post" class="d-flex flex-column gap-2" onsubmit="return validarAcompanhante(this)">
                         <input type="hidden" name="idProgramacao" th:value="${v.idProgramacao}">
-                        <select name="idPassageiro" class="form-select form-select-sm" required
-                                aria-label="Selecionar passageiro para reservar"
-                                th:disabled="${passageiros.isEmpty()}">
-                            <option value="">Selecione...</option>
-                            <option th:each="p : ${passageiros}" th:value="${p.id}"
-                                    th:text="${p.nome + ' — ' + p.idade + ' anos'}"></option>
-                        </select>
-                        <button class="btn btn-sm btn-primary text-nowrap"
-                                th:disabled="${passageiros.isEmpty()}">Reservar</button>
+                        <div class="d-flex gap-2">
+                            <select name="idPassageiro" class="form-select form-select-sm passageiro-sel" required
+                                    aria-label="Selecionar passageiro para reservar"
+                                    th:disabled="${passageiros.isEmpty()}"
+                                    onchange="toggleAcompanhante(this)">
+                                <option value="" data-idade="-1">Selecione...</option>
+                                <option th:each="p : ${passageiros}"
+                                        th:value="${p.id}"
+                                        th:attr="data-idade=${p.idade}"
+                                        th:text="${p.nome + ' — ' + p.idade + ' anos'}"></option>
+                            </select>
+                            <button class="btn btn-sm btn-primary text-nowrap"
+                                    th:disabled="${passageiros.isEmpty()}">Reservar</button>
+                        </div>
+                        <!-- Acompanhante: visível apenas quando passageiro tem entre 2 e 10 anos (RN04) -->
+                        <div class="acomp-row d-none">
+                            <label class="form-label mb-1 small text-warning fw-semibold">
+                                ⚠ Criança (2–10 anos) — selecione um acompanhante adulto (+21 anos):
+                            </label>
+                            <select name="idAcompanhante" class="form-select form-select-sm acomp-sel">
+                                <option value="">Selecione o acompanhante...</option>
+                                <option th:each="p : ${passageiros}"
+                                        th:value="${p.id}"
+                                        th:attr="data-idade=${p.idade}"
+                                        th:text="${p.nome + ' — ' + p.idade + ' anos'}"></option>
+                            </select>
+                        </div>
                     </form>
                 </td>
             </tr>
@@ -103,5 +121,46 @@
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+/**
+ * Exibe/oculta o select de acompanhante conforme a idade do passageiro escolhido.
+ * RN04: passageiro entre 2 e 10 anos precisa de acompanhante com mais de 21 anos.
+ */
+function toggleAcompanhante(sel) {
+    const form      = sel.closest('form');
+    const acompRow  = form.querySelector('.acomp-row');
+    const acompSel  = form.querySelector('.acomp-sel');
+    const idade     = parseInt(sel.selectedOptions[0]?.dataset.idade ?? '-1', 10);
+    const ehCrianca = idade >= 2 && idade <= 10;
+    const passId    = sel.value;
+
+    if (ehCrianca) {
+        // Mostra o painel e filtra para mostrar apenas adultos (>21) que não sejam o próprio passageiro
+        acompRow.classList.remove('d-none');
+        acompSel.required = true;
+        Array.from(acompSel.options).forEach(opt => {
+            if (opt.value === '') return; // mantém o placeholder
+            const idadeOpt = parseInt(opt.dataset.idade ?? '0', 10);
+            opt.hidden = (opt.value === passId) || (idadeOpt <= 21);
+        });
+    } else {
+        acompRow.classList.add('d-none');
+        acompSel.required = false;
+        acompSel.value    = '';
+        Array.from(acompSel.options).forEach(opt => opt.hidden = false);
+    }
+}
+
+/** Validação antes do submit: garante que acompanhante foi selecionado quando obrigatório. */
+function validarAcompanhante(form) {
+    const acompRow = form.querySelector('.acomp-row');
+    const acompSel = form.querySelector('.acomp-sel');
+    if (!acompRow.classList.contains('d-none') && !acompSel.value) {
+        alert('Selecione um acompanhante adulto (mais de 21 anos) para o passageiro menor de idade.');
+        return false;
+    }
+    return true;
+}
+</script>
 </body>
 </html>

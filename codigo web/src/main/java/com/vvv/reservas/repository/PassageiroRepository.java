@@ -13,4 +13,6 @@ public interface PassageiroRepository extends JpaRepository<Passageiro, Long> {
     boolean existsByCpf(String cpf);
 
     List<Passageiro> findAllByAtivoTrueOrderByNomeAsc();
+
+    List<Passageiro> findByCliente_Usuario_EmailAndAtivoTrueOrderByNomeAsc(String email);
 }

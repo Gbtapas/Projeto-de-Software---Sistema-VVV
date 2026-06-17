@@ -1,6 +1,7 @@
 package com.vvv.reservas.service;
 
 import com.vvv.reservas.model.entity.*;
+import com.vvv.reservas.model.enums.StatusModal;
 import com.vvv.reservas.model.enums.StatusProgramacao;
 import com.vvv.reservas.model.enums.TipoModal;
 import com.vvv.reservas.model.enums.TipoRota;
@@ -92,12 +93,18 @@ public class CatalogoService {
     @Transactional
     public void salvarModal(String codigo, TipoModal tipo, String modelo, Integer ano,
                             Integer capacidade, Integer idTransportadora, Integer idAeroportoBase) {
+        int anoAtual = LocalDate.now().getYear();
+        if (ano == null || ano < 1950 || ano > anoAtual)
+            throw new RegraNegocioException("Ano de fabricação do modal deve estar entre 1950 e " + anoAtual + ".");
+        if (capacidade == null || capacidade < 1)
+            throw new RegraNegocioException("Capacidade do modal deve ser de pelo menos 1 passageiro.");
         Modal m = new Modal();
         m.setCodigo((codigo == null || codigo.isBlank()) ? "MOD" + System.currentTimeMillis() : codigo);
         m.setTipo(tipo);
         m.setModelo(modelo);
         m.setAno(ano);
         m.setCapacidade(capacidade);
+        m.setStatus(StatusModal.DISPONIVEL);
         m.setTransportadora(transportadoraRepo.getReferenceById(idTransportadora));
         m.setIdAeroportoBase(idAeroportoBase); // CHECK do banco garante AVIAO → aeroporto
         salvar(() -> modalRepo.save(m));
@@ -122,6 +129,8 @@ public class CatalogoService {
             t.setOrdem(1);
             t.setCidadeOrigem(cidadeRepo.getReferenceById(idOrigem));
             t.setCidadeDestino(cidadeRepo.getReferenceById(idDestino));
+            if (tempoMin == null || tempoMin < 1)
+                throw new RegraNegocioException("Tempo estimado da rota deve ser de pelo menos 1 minuto.");
             t.setHoraPartida(horaPartida);
             t.setHoraChegada(horaChegada);
             t.setTempoEstimadoMin(tempoMin);
@@ -134,6 +143,12 @@ public class CatalogoService {
     @Transactional
     public void salvarProgramacao(Integer idRota, Integer idModal, LocalDate data,
                                   Integer vagas, BigDecimal valor) {
+        if (data == null || data.isBefore(LocalDate.now()))
+            throw new RegraNegocioException("A data da viagem não pode ser no passado.");
+        if (vagas == null || vagas < 1)
+            throw new RegraNegocioException("A programação deve ter pelo menos 1 vaga disponível.");
+        if (valor == null || valor.compareTo(BigDecimal.ZERO) <= 0)
+            throw new RegraNegocioException("O valor base da viagem deve ser maior que zero.");
         ProgramacaoViagem p = new ProgramacaoViagem();
         p.setRota(rotaRepo.getReferenceById(idRota));
         p.setModal(modalRepo.getReferenceById(idModal));

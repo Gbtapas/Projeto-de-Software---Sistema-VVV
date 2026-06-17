@@ -2,9 +2,14 @@ package com.vvv.reservas.service;
 
 import com.vvv.reservas.dto.FuncionarioForm;
 import com.vvv.reservas.model.entity.Funcionario;
+import com.vvv.reservas.model.entity.Perfil;
+import com.vvv.reservas.model.entity.Usuario;
 import com.vvv.reservas.model.enums.OperacaoAuditoria;
 import com.vvv.reservas.model.enums.TipoFuncionario;
 import com.vvv.reservas.repository.FuncionarioRepository;
+import com.vvv.reservas.repository.PerfilRepository;
+import com.vvv.reservas.repository.UsuarioRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,6 +34,9 @@ import static org.mockito.Mockito.when;
 class FuncionarioServiceTest {
 
     @Mock FuncionarioRepository funcionarioRepo;
+    @Mock UsuarioRepository usuarioRepo;
+    @Mock PerfilRepository perfilRepo;
+    @Mock PasswordEncoder passwordEncoder;
     @Mock AuditoriaService auditoria;
     @InjectMocks FuncionarioService service;
 
@@ -62,6 +70,8 @@ class FuncionarioServiceTest {
     @DisplayName("salvar lança exception quando CPF já cadastrado")
     void salvar_cpfDuplicado_lancaException() {
         FuncionarioForm form = form("11111111111", "Carlos");
+        form.setEmail("carlos@vvv.com");
+        form.setSenha("senha123");
         when(funcionarioRepo.existsByCpf("11111111111")).thenReturn(true);
 
         assertThatThrownBy(() -> service.salvar(form))
@@ -75,9 +85,20 @@ class FuncionarioServiceTest {
     @DisplayName("salvar persiste funcionário com código gerado e registra auditoria")
     void salvar_cpfNovo_salvaNaBaseERegistraAuditoria() {
         FuncionarioForm form = form("22222222222", "Beatriz Lima");
+        form.setEmail("beatriz@vvv.com");
+        form.setSenha("senha123");
         Funcionario salvo = funcionario("22222222222", "Beatriz Lima");
 
         when(funcionarioRepo.existsByCpf("22222222222")).thenReturn(false);
+        when(usuarioRepo.findByEmail("beatriz@vvv.com")).thenReturn(Optional.empty());
+        
+        Perfil perfil = new Perfil();
+        when(perfilRepo.findByNome("FUNCIONARIO")).thenReturn(Optional.of(perfil));
+        when(passwordEncoder.encode("senha123")).thenReturn("encoded_senha");
+        
+        Usuario usuario = new Usuario();
+        when(usuarioRepo.save(any())).thenReturn(usuario);
+        
         when(funcionarioRepo.save(any())).thenReturn(salvo);
 
         Funcionario resultado = service.salvar(form);

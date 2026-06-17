@@ -32,6 +32,7 @@
             <div class="navbar-nav">
                 <span class="navbar-text text-white-50 me-3" th:if="${usuarioLogado != null}"
                       th:text="${usuarioLogado}">usuário</span>
+                <a class="nav-link" th:if="${usuarioLogado == null}" th:href="@{/signup}">Cadastrar-se</a>
                 <a class="nav-link" th:if="${usuarioLogado == null}" th:href="@{/login}">Entrar</a>
                 <form th:if="${usuarioLogado != null}" th:action="@{/logout}" method="post" class="d-inline">
                     <button type="submit" class="btn btn-sm btn-outline-light">Sair</button>

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
+
 /** Cadastro de passageiro (UC01 / RF01). */
 @Controller
 public class PassageiroController {
@@ -34,12 +36,14 @@ public class PassageiroController {
     @PostMapping("/passageiro/novo")
     public String salvar(@Valid @ModelAttribute("passageiroForm") PassageiroForm form,
                          BindingResult br,
+                         Principal principal,
                          RedirectAttributes ra) {
         if (br.hasErrors()) {
             return "cadastro";
         }
         try {
-            Passageiro p = passageiroService.cadastrar(form);
+            String email = principal != null ? principal.getName() : null;
+            Passageiro p = passageiroService.cadastrar(form, email);
             ra.addFlashAttribute("msgSucesso",
                     "Passageiro cadastrado: " + p.getNome() + " (código " + p.getCodigo() + ").");
             return "redirect:/viagens";

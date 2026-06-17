@@ -36,8 +36,9 @@ public class VendaPresencialController {
 
     @PostMapping
     public String registrar(@RequestParam Integer idProgramacao, @RequestParam Long idPassageiro,
+                            @RequestParam(required = false) Long idAcompanhante,
                             @RequestParam Integer idPonto, Principal principal) {
-        Long idReserva = vendaService.registrarPresencial(idProgramacao, idPassageiro, idPonto, principal.getName());
+        Long idReserva = vendaService.registrarPresencial(idProgramacao, idPassageiro, idAcompanhante, idPonto, principal.getName());
         // Encaminha para o checkout para coletar o pagamento e emitir o ticket.
         return "redirect:/checkout/" + idReserva;
     }

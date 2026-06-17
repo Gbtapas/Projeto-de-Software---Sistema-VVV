@@ -117,13 +117,13 @@ public class VendaService {
 
     // ---------- RF13: registrar venda presencial ----------
     @Transactional
-    public Long registrarPresencial(Integer idProgramacao, Long idPassageiro, Integer idPonto,
-                                    String funcionarioEmail) {
+    public Long registrarPresencial(Integer idProgramacao, Long idPassageiro, Long idAcompanhante,
+                                    Integer idPonto, String funcionarioEmail) {
         Funcionario func = funcionarioRepo.findByUsuario_Email(funcionarioEmail)
                 .orElseThrow(() -> new RegraNegocioException("Funcionário não vinculado ao usuário logado."));
         try {
             // Cria a reserva no canal PRESENCIAL (regras de idade/capacidade via triggers)
-            Reserva reserva = reservaService.criar(idProgramacao, idPassageiro, CanalReserva.PRESENCIAL);
+            Reserva reserva = reservaService.criar(idProgramacao, idPassageiro, idAcompanhante, CanalReserva.PRESENCIAL);
 
             Venda venda = new Venda();
             venda.setReserva(reserva);

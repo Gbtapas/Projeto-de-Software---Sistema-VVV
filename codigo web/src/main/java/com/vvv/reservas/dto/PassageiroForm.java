@@ -2,6 +2,7 @@ package com.vvv.reservas.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -18,6 +19,7 @@ public class PassageiroForm {
     private String nome;
 
     @NotNull(message = "Data de nascimento é obrigatória")
+    @Past(message = "Data de nascimento não pode ser no futuro")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dataNascimento;
 

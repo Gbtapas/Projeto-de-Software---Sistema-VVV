@@ -5,6 +5,8 @@ import com.vvv.reservas.model.entity.ProgramacaoViagem;
 import com.vvv.reservas.model.entity.Reserva;
 import com.vvv.reservas.model.enums.CanalReserva;
 import com.vvv.reservas.model.enums.OperacaoAuditoria;
+import com.vvv.reservas.repository.ClienteRepository;
+import com.vvv.reservas.repository.PassageiroRepository;
 import com.vvv.reservas.repository.ProgramacaoViagemRepository;
 import com.vvv.reservas.repository.ReservaRepository;
 import jakarta.persistence.EntityManager;
@@ -33,6 +35,8 @@ class ReservaServiceTest {
 
     @Mock ReservaRepository reservaRepository;
     @Mock ProgramacaoViagemRepository programacaoRepository;
+    @Mock PassageiroRepository passageiroRepository;
+    @Mock ClienteRepository clienteRepository;
     @Mock EntityManager entityManager;
     @Mock AuditoriaService auditoria;
     @InjectMocks ReservaService service;
@@ -81,7 +85,7 @@ class ReservaServiceTest {
     void criar_programacaoNaoEncontrada_lancaException() {
         when(programacaoRepository.findById(99)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> service.criar(99, 1L, CanalReserva.ONLINE))
+        assertThatThrownBy(() -> service.criar(99, 1L, null, CanalReserva.ONLINE))
                 .isInstanceOf(RegraNegocioException.class)
                 .hasMessageContaining("Viagem");
     }
@@ -96,11 +100,11 @@ class ReservaServiceTest {
         salva.setCanal(CanalReserva.ONLINE);
 
         when(programacaoRepository.findById(1)).thenReturn(Optional.of(prog));
-        when(entityManager.getReference(eq(Passageiro.class), eq(10L))).thenReturn(new Passageiro());
+        when(passageiroRepository.findById(10L)).thenReturn(Optional.of(new Passageiro()));
         when(reservaRepository.saveAndFlush(any())).thenReturn(salva);
         doNothing().when(entityManager).refresh(any());
 
-        Reserva resultado = service.criar(1, 10L, CanalReserva.ONLINE);
+        Reserva resultado = service.criar(1, 10L, null, CanalReserva.ONLINE);
 
         assertThat(resultado).isSameAs(salva);
         verify(entityManager).refresh(salva);
@@ -114,11 +118,11 @@ class ReservaServiceTest {
         prog.setValorBase(BigDecimal.TEN);
 
         when(programacaoRepository.findById(1)).thenReturn(Optional.of(prog));
-        when(entityManager.getReference(eq(Passageiro.class), eq(1L))).thenReturn(new Passageiro());
+        when(passageiroRepository.findById(1L)).thenReturn(Optional.of(new Passageiro()));
         when(reservaRepository.saveAndFlush(any()))
                 .thenThrow(new RuntimeException(new RuntimeException("RN07: Overbooking prevenido.")));
 
-        assertThatThrownBy(() -> service.criar(1, 1L, CanalReserva.ONLINE))
+        assertThatThrownBy(() -> service.criar(1, 1L, null, CanalReserva.ONLINE))
                 .isInstanceOf(RegraNegocioException.class);
     }
 }

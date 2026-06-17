@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -41,8 +42,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
-                // Recursos estáticos e login
-                .requestMatchers("/css/**", "/js/**", "/login", "/error").permitAll()
+                // Recursos estáticos, login e cadastro
+                .requestMatchers("/css/**", "/js/**", "/login", "/signup", "/error").permitAll()
                 // Fluxo público do cliente (UC01–UC05)
                 .requestMatchers("/", "/viagens", "/passageiro/**", "/reserva/**",
                                  "/checkout/**", "/pagamento", "/ticket/**").permitAll()
@@ -73,7 +74,7 @@ public class SecurityConfig {
         SavedRequestAwareAuthenticationSuccessHandler delegate =
                 new SavedRequestAwareAuthenticationSuccessHandler();
         delegate.setDefaultTargetUrl("/");
-        delegate.setAlwaysUseDefaultTargetUrl(false);
+        delegate.setAlwaysUseDefaultTargetUrl(true);
 
         return (HttpServletRequest req, HttpServletResponse res, Authentication auth) -> {
             loginAttemptService.registrarSucesso(auth.getName());
@@ -85,6 +86,11 @@ public class SecurityConfig {
         // UC18 fluxo alternativo: registra falha, bloqueia após 3 tentativas
         return (HttpServletRequest req, HttpServletResponse res, AuthenticationException ex) -> {
             String email = req.getParameter("username");
+            if (ex instanceof LockedException) {
+                // Conta já bloqueada — não incrementa o contador novamente
+                res.sendRedirect(req.getContextPath() + "/login?bloqueado");
+                return;
+            }
             if (email != null && !email.isBlank()) {
                 loginAttemptService.registrarFalha(email);
             }

@@ -2,7 +2,6 @@ package com.vvv.reservas.security;
 
 import com.vvv.reservas.model.entity.Usuario;
 import com.vvv.reservas.repository.UsuarioRepository;
-import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,10 +29,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         Usuario u = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + email));
 
-        // UC18: bloqueia após 3 tentativas falhas por 15 minutos
-        if (u.getBloqueadoAte() != null && u.getBloqueadoAte().isAfter(LocalDateTime.now())) {
-            throw new LockedException("Conta bloqueada temporariamente. Tente novamente em alguns minutos.");
-        }
+        boolean bloqueado = u.getBloqueadoAte() != null && u.getBloqueadoAte().isAfter(LocalDateTime.now());
 
         List<SimpleGrantedAuthority> authorities = u.getPerfis().stream()
                 .map(p -> new SimpleGrantedAuthority(p.getAuthority()))
@@ -43,6 +39,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .password(u.getSenhaHash())
                 .authorities(authorities)
                 .disabled(!Boolean.TRUE.equals(u.getAtivo()))
+                .accountLocked(bloqueado)
                 .build();
     }
 }

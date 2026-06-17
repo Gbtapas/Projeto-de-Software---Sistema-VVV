@@ -9,6 +9,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
+import java.security.Principal;
+
 /** Resultado da consulta de viagens disponíveis (UC02). */
 @Controller
 public class ViagemController {
@@ -22,10 +24,16 @@ public class ViagemController {
     }
 
     @GetMapping("/viagens")
-    public String viagens(@ModelAttribute("busca") BuscaViagemForm busca, Model model) {
+    public String viagens(@ModelAttribute("busca") BuscaViagemForm busca, Principal principal, Model model) {
         model.addAttribute("cidades", viagemService.listarCidades());
         model.addAttribute("viagens", viagemService.buscar(busca));
-        model.addAttribute("passageiros", passageiroService.listarAtivos());
+        
+        if (principal != null) {
+            model.addAttribute("passageiros", passageiroService.listarPorUsuario(principal.getName()));
+        } else {
+            model.addAttribute("passageiros", passageiroService.listarAtivos());
+        }
+        
         model.addAttribute("reservaForm", new ReservaForm());
         return "viagens";
     }
