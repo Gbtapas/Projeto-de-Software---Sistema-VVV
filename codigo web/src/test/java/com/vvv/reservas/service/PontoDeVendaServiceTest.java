@@ -40,6 +40,7 @@ class PontoDeVendaServiceTest {
     @Test
     @DisplayName("listar retorna apenas PDVs ativos")
     void listar_delegaAoRepositorio() {
+        // so pra ter certeza que ta pegando o valor certo
         PontoDeVenda pdv = new PontoDeVenda();
         pdv.setNome("Loja Centro");
         when(pdvRepo.findAllByAtivoTrueOrderByNomeAsc()).thenReturn(List.of(pdv));
@@ -52,6 +53,7 @@ class PontoDeVendaServiceTest {
     @Test
     @DisplayName("listarVinculos retorna vínculos ativos")
     void listarVinculos_delegaAoRepositorio() {
+        // conferindo os valores retornados
         when(fpvRepo.findByAtivoTrueOrderByDataInicioDesc()).thenReturn(List.of(new FuncionarioPontoDeVenda()));
 
         List<FuncionarioPontoDeVenda> resultado = service.listarVinculos();
@@ -64,6 +66,7 @@ class PontoDeVendaServiceTest {
     @Test
     @DisplayName("salvar persiste PDV com código gerado e registra auditoria")
     void salvar_sucesso_retornaPdvERegistraAuditoria() throws Exception {
+        // bora testar esse cenario
         PontoDeVenda salvo = new PontoDeVenda();
         salvo.setCnpj("12345678000199");
         salvo.setNome("Filial Norte");
@@ -92,6 +95,7 @@ class PontoDeVendaServiceTest {
     @Test
     @DisplayName("vincular usa hoje como data de início quando dataInicio é null")
     void vincular_dataNull_usaHoje() {
+        // garantindo que nao vai dar erro aqui
         FuncionarioPontoDeVenda salvo = new FuncionarioPontoDeVenda();
         when(funcionarioRepo.getReferenceById(1L)).thenReturn(new com.vvv.reservas.model.entity.Funcionario());
         when(pdvRepo.getReferenceById(2)).thenReturn(new PontoDeVenda());
@@ -107,6 +111,7 @@ class PontoDeVendaServiceTest {
     @Test
     @DisplayName("vincular persiste vínculo e registra auditoria")
     void vincular_comData_salvaEAudita() {
+        // conferindo os valores retornados
         LocalDate inicio = LocalDate.of(2026, 1, 15);
         FuncionarioPontoDeVenda salvo = new FuncionarioPontoDeVenda();
         when(funcionarioRepo.getReferenceById(1L)).thenReturn(new com.vvv.reservas.model.entity.Funcionario());
@@ -125,6 +130,7 @@ class PontoDeVendaServiceTest {
     @Test
     @DisplayName("desvincular lança exception quando vínculo não encontrado")
     void desvincular_naoEncontrado_lancaException() {
+        // teste super importante
         when(fpvRepo.findById(99L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.desvincular(99L))
@@ -135,6 +141,7 @@ class PontoDeVendaServiceTest {
     @Test
     @DisplayName("desvincular define ativo=false com data de hoje e audita")
     void desvincular_sucesso_desativaEAudita() {
+        // checando o comportamento esperado
         FuncionarioPontoDeVenda fpv = new FuncionarioPontoDeVenda();
         fpv.setAtivo(true);
         when(fpvRepo.findById(5L)).thenReturn(Optional.of(fpv));

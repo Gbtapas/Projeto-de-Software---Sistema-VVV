@@ -42,6 +42,7 @@ class TransferenciaServiceTest {
     @Test
     @DisplayName("historico delega ao repositório pela tabela transferencia_transportadora")
     void historico_delegaAoRepositorio() {
+        // se passar isso o resto vai de boa
         LogAuditoria log = new LogAuditoria();
         when(logRepo.findByTabelaOrderByDataHoraDesc("transferencia_transportadora"))
                 .thenReturn(List.of(log));
@@ -57,6 +58,7 @@ class TransferenciaServiceTest {
     @Test
     @DisplayName("transferir não registra auditoria quando não há reservas confirmadas para a transportadora")
     void transferir_semReservas_naoRegistraAuditoria() {
+        // verificando se ta tudo certo
         when(reservaRepo.findByStatusOrderByDataCriacaoDesc(StatusReserva.CONFIRMADA))
                 .thenReturn(List.of());
 
@@ -68,6 +70,7 @@ class TransferenciaServiceTest {
     @Test
     @DisplayName("transferir registra auditoria com dados das reservas da transportadora")
     void transferir_comReservas_registraAuditoria() {
+        // bora testar esse cenario
         Reserva r = reservaParaTransportadora(1);
         when(reservaRepo.findByStatusOrderByDataCriacaoDesc(StatusReserva.CONFIRMADA))
                 .thenReturn(List.of(r));
@@ -85,6 +88,7 @@ class TransferenciaServiceTest {
     @Test
     @DisplayName("transferir ignora reservas de outras transportadoras")
     void transferir_reservasDeOutraTransportadora_naoRegistra() {
+        // teste super importante
         Reserva rDeOutra = reservaParaTransportadora(99);
         when(reservaRepo.findByStatusOrderByDataCriacaoDesc(StatusReserva.CONFIRMADA))
                 .thenReturn(List.of(rDeOutra));
@@ -99,6 +103,7 @@ class TransferenciaServiceTest {
     @Test
     @DisplayName("notificarManutencao registra auditoria com tipo MANUTENCAO")
     void notificarManutencao_registraAuditoria() {
+        // conferindo os valores retornados
         service.notificarManutencao(5, "Substituição de peças");
 
         verify(auditoria).registrar(
@@ -114,6 +119,7 @@ class TransferenciaServiceTest {
     @Test
     @DisplayName("listarPendentes filtra reservas já transferidas e agrupa por transportadora")
     void listarPendentes_filtraJaTransferidas() {
+        // verificando se ta tudo certo
         Reserva pendente = reservaParaTransportadora(1);
         Reserva jaTransferida = reservaParaTransportadora(2);
 

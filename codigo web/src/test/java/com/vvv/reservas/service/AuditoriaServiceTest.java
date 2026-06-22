@@ -47,6 +47,7 @@ class AuditoriaServiceTest {
     @Test
     @DisplayName("registrar persiste LogAuditoria com todos os campos informados")
     void registrar_salvaNaTabela() {
+        // garantindo a logica de negocio
         service.registrar("passageiros", 10L, OperacaoAuditoria.INSERT, null, "{\"nome\":\"João\"}");
 
         ArgumentCaptor<LogAuditoria> captor = ArgumentCaptor.forClass(LogAuditoria.class);
@@ -63,6 +64,7 @@ class AuditoriaServiceTest {
     @Test
     @DisplayName("registrar resolve idUsuario via SecurityContext quando autenticado")
     void registrar_usuarioAutenticado_resolveIdUsuario() {
+        // conferindo os valores retornados
         Usuario u = new Usuario();
         u.setEmail("admin@vvv.com");
 
@@ -79,6 +81,7 @@ class AuditoriaServiceTest {
     @Test
     @DisplayName("registrar não lança exceção quando SecurityContext está vazio (anonimous)")
     void registrar_semUsuarioAutenticado_idUsuarioNull() {
+        // se passar isso o resto vai de boa
         service.registrar("reservas", 1L, OperacaoAuditoria.INSERT, null, "{}");
 
         ArgumentCaptor<LogAuditoria> captor = ArgumentCaptor.forClass(LogAuditoria.class);
@@ -89,6 +92,7 @@ class AuditoriaServiceTest {
     @Test
     @DisplayName("registrar absorve exceção do repositório sem propagar para o chamador")
     void registrar_falhaNoRepositorio_naoInterrompeFluxo() {
+        // bora testar esse cenario
         when(logRepo.save(any())).thenThrow(new RuntimeException("banco indisponível"));
 
         // não deve lançar nenhuma exceção

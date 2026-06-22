@@ -41,6 +41,7 @@ class ManutencaoServiceTest {
     @Test
     @DisplayName("listar delega ao repositório ordenado por dataInicio DESC")
     void listar_delegaAoRepositorio() {
+        // verificando se ta tudo certo
         Manutencao m = new Manutencao();
         when(manutencaoRepo.findAllByOrderByDataInicioDesc()).thenReturn(List.of(m));
 
@@ -55,6 +56,7 @@ class ManutencaoServiceTest {
     @Test
     @DisplayName("agendar salva manutenção e registra auditoria e notificação")
     void agendar_sucesso_salvaAuditaENotifica() throws Exception {
+        // teste super importante
         LocalDate inicio = LocalDate.of(2026, 7, 1);
         LocalDate fim    = LocalDate.of(2026, 7, 10);
 
@@ -88,6 +90,7 @@ class ManutencaoServiceTest {
     @Test
     @DisplayName("agendar usa texto padrão na notificação quando descricao é null")
     void agendar_descricaoNull_usaTextoPadrao() throws Exception {
+        // conferindo os valores retornados
         Transportadora transportadora = new Transportadora();
         Modal modal = new Modal();
         modal.setTransportadora(transportadora);
@@ -111,6 +114,7 @@ class ManutencaoServiceTest {
     @Test
     @DisplayName("mudarStatus lança exception quando manutenção não encontrada")
     void mudarStatus_naoEncontrado_lancaException() {
+        // so pra ter certeza que ta pegando o valor certo
         when(manutencaoRepo.findById(99)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.mudarStatus(99, StatusManutencao.CONCLUIDA))
@@ -121,6 +125,7 @@ class ManutencaoServiceTest {
     @Test
     @DisplayName("mudarStatus atualiza o status da manutenção e persiste")
     void mudarStatus_sucesso_atualizaStatus() {
+        // se passar isso o resto vai de boa
         Manutencao m = new Manutencao();
         m.setStatus(StatusManutencao.EM_ANDAMENTO);
         when(manutencaoRepo.findById(1)).thenReturn(Optional.of(m));

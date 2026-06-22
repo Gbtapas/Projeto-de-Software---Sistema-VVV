@@ -149,9 +149,15 @@ public class CatalogoService {
             throw new RegraNegocioException("A programação deve ter pelo menos 1 vaga disponível.");
         if (valor == null || valor.compareTo(BigDecimal.ZERO) <= 0)
             throw new RegraNegocioException("O valor base da viagem deve ser maior que zero.");
+        Modal modal = modalRepo.findById(idModal)
+                .orElseThrow(() -> new RegraNegocioException("Modal não encontrado."));
+        if (vagas > modal.getCapacidade()) {
+            throw new RegraNegocioException("O número de vagas (" + vagas + ") não pode exceder a capacidade do modal (" + modal.getCapacidade() + ").");
+        }
+
         ProgramacaoViagem p = new ProgramacaoViagem();
         p.setRota(rotaRepo.getReferenceById(idRota));
-        p.setModal(modalRepo.getReferenceById(idModal));
+        p.setModal(modal);
         p.setDataViagem(data);
         p.setVagasDisponiveis(vagas);
         p.setValorBase(valor);

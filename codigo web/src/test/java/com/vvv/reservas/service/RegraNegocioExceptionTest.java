@@ -12,6 +12,7 @@ class RegraNegocioExceptionTest {
     @Test
     @DisplayName("construtor simples preserva a mensagem recebida")
     void construtor_preservaMensagem() {
+        // conferindo os valores retornados
         RegraNegocioException ex = new RegraNegocioException("Erro de negócio");
 
         assertThat(ex.getMessage()).isEqualTo("Erro de negócio");
@@ -20,6 +21,7 @@ class RegraNegocioExceptionTest {
     @Test
     @DisplayName("de() extrai mensagem com prefixo RN da causa raiz")
     void de_extraiMensagemComPrefixoRN() {
+        // so pra ter certeza que ta pegando o valor certo
         Throwable causa = new SQLException("RN04: Passageiros entre 2 e 10 anos precisam de acompanhante.");
         Throwable wrapper = new RuntimeException("could not execute statement", causa);
 
@@ -31,6 +33,7 @@ class RegraNegocioExceptionTest {
     @Test
     @DisplayName("de() extrai mensagem com prefixo RI da causa raiz")
     void de_extraiMensagemComPrefixoRI() {
+        // garantindo a logica de negocio
         Throwable causa = new SQLException("RI01/RN07: Não há vagas disponíveis. Overbooking prevenido.");
         RegraNegocioException ex = RegraNegocioException.de(new RuntimeException(causa));
 
@@ -42,6 +45,7 @@ class RegraNegocioExceptionTest {
     @Test
     @DisplayName("de() usa mensagem de fallback quando nenhuma regra é identificada")
     void de_semMensagemReconhecida_usaFallback() {
+        // mais uma checagem de rotina
         Throwable ex = new RuntimeException("foreign key constraint fails");
 
         RegraNegocioException resultado = RegraNegocioException.de(ex);
@@ -52,6 +56,7 @@ class RegraNegocioExceptionTest {
     @Test
     @DisplayName("de() remove prefixo técnico do driver, mantendo apenas o texto da regra")
     void de_removePrefixoTecnicoDoDriver() {
+        // garantindo que nao vai dar erro aqui
         String mensagemDriver = "com.mysql.cj.jdbc.exceptions.MysqlDataTruncation: RN05: Passageiro menor de 2 anos.";
         Throwable causa = new SQLException(mensagemDriver);
 
@@ -63,6 +68,7 @@ class RegraNegocioExceptionTest {
     @Test
     @DisplayName("de() percorre toda a cadeia de causas até encontrar a mensagem RN")
     void de_percorreCadeiaCompleta() {
+        // bora testar esse cenario
         Throwable nivel3 = new SQLException("RN08: Regra de desconto aplicada.");
         Throwable nivel2 = new RuntimeException("constraint violation", nivel3);
         Throwable nivel1 = new RuntimeException("transaction rolled back", nivel2);
@@ -75,6 +81,7 @@ class RegraNegocioExceptionTest {
     @Test
     @DisplayName("de() detecta Overbooking mesmo sem prefixo RN/RI")
     void de_detectaOverbooking() {
+        // se passar isso o resto vai de boa
         Throwable causa = new RuntimeException("Overbooking prevenido.");
 
         RegraNegocioException ex = RegraNegocioException.de(causa);

@@ -46,6 +46,7 @@ class ReservaServiceTest {
     @Test
     @DisplayName("listarPorUsuario delega ao repositório com o e-mail informado")
     void listarPorUsuario_delegaAoRepositorio() {
+        // teste super importante
         Reserva r = new Reserva();
         when(reservaRepository.findMinhasReservas("user@vvv.com")).thenReturn(List.of(r));
 
@@ -60,6 +61,7 @@ class ReservaServiceTest {
     @Test
     @DisplayName("buscar retorna a reserva quando encontrada")
     void buscar_encontrado_retornaReserva() {
+        // mais uma checagem de rotina
         Reserva r = new Reserva();
         when(reservaRepository.findById(1L)).thenReturn(Optional.of(r));
 
@@ -71,6 +73,7 @@ class ReservaServiceTest {
     @Test
     @DisplayName("buscar lança RegraNegocioException quando reserva não existe")
     void buscar_naoEncontrado_lancaException() {
+        // checando o comportamento esperado
         when(reservaRepository.findById(99L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.buscar(99L))
@@ -83,6 +86,7 @@ class ReservaServiceTest {
     @Test
     @DisplayName("criar lança exception quando programação não é encontrada")
     void criar_programacaoNaoEncontrada_lancaException() {
+        // garantindo a logica de negocio
         when(programacaoRepository.findById(99)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.criar(99, 1L, null, CanalReserva.ONLINE))
@@ -93,6 +97,7 @@ class ReservaServiceTest {
     @Test
     @DisplayName("criar persiste reserva, faz refresh e registra auditoria")
     void criar_sucesso_retornaReservaERegistraAuditoria() {
+        // checando o comportamento esperado
         ProgramacaoViagem prog = new ProgramacaoViagem();
         prog.setValorBase(new BigDecimal("250.00"));
 
@@ -114,6 +119,7 @@ class ReservaServiceTest {
     @Test
     @DisplayName("criar converte RuntimeException em RegraNegocioException")
     void criar_excecaoBancoDados_convertidaEmRegraNegocioException() {
+        // mais uma checagem de rotina
         ProgramacaoViagem prog = new ProgramacaoViagem();
         prog.setValorBase(BigDecimal.TEN);
 

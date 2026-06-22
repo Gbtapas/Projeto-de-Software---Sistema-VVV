@@ -21,6 +21,7 @@ class ReservasApplicationTests {
     @Test
     @DisplayName("Extrai a mensagem da regra RN04 de uma cadeia de exceções de trigger")
     void extraiMensagemDeReGraDeNegocio() {
+        // se passar isso o resto vai de boa
         Throwable raiz = new SQLException(
                 "RN04: Passageiros entre 2 e 10 anos precisam de acompanhante cadastrado no sistema.");
         Throwable wrapper = new RuntimeException("could not execute statement", raiz);
@@ -34,6 +35,7 @@ class ReservasApplicationTests {
     @Test
     @DisplayName("Detecta prevenção de overbooking (RI01/RN07) na cadeia de exceções")
     void detectaOverbooking() {
+        // garantindo a logica de negocio
         Throwable raiz = new SQLException("RI01/RN07: Não há vagas disponíveis. Overbooking prevenido.");
         RegraNegocioException ex = RegraNegocioException.de(new RuntimeException(raiz));
         assertTrue(ex.getMessage().contains("Overbooking") || ex.getMessage().startsWith("RI"));

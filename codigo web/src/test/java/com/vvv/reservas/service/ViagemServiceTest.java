@@ -31,6 +31,7 @@ class ViagemServiceTest {
     @Test
     @DisplayName("buscar delega ao repositório com os parâmetros do form")
     void buscar_delegaAoRepositorioComParametrosDoForm() {
+        // checando o comportamento esperado
         LocalDate data = LocalDate.of(2026, 8, 15);
         BuscaViagemForm form = new BuscaViagemForm();
         form.setOrigem("sao");
@@ -48,6 +49,7 @@ class ViagemServiceTest {
     @Test
     @DisplayName("buscar converte origem/destino em maiúsculas via BuscaViagemForm")
     void buscar_origemDestinoEmMinusculas_convertidosParaMaiusculas() {
+        // mais uma checagem de rotina
         LocalDate data = LocalDate.of(2026, 9, 1);
         BuscaViagemForm form = new BuscaViagemForm();
         form.setOrigem("gru");
@@ -64,6 +66,7 @@ class ViagemServiceTest {
     @Test
     @DisplayName("buscar passa null ao repositório quando origem está em branco")
     void buscar_origemEmBranco_passaNull() {
+        // so pra ter certeza que ta pegando o valor certo
         LocalDate data = LocalDate.of(2026, 10, 1);
         BuscaViagemForm form = new BuscaViagemForm();
         form.setOrigem("   ");
@@ -82,6 +85,7 @@ class ViagemServiceTest {
     @Test
     @DisplayName("listarCidades retorna cidades ordenadas por nome")
     void listarCidades_delegaAoRepositorio() {
+        // so pra ter certeza que ta pegando o valor certo
         Cidade c = new Cidade();
         when(cidadeRepository.findAllByOrderByNomeAsc()).thenReturn(List.of(c));
 

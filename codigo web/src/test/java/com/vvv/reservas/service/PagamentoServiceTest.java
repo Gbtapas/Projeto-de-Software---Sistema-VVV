@@ -50,6 +50,7 @@ class PagamentoServiceTest {
     @Test
     @DisplayName("processarEAprovar lança exception quando reserva não existe")
     void processarEAprovar_reservaNaoEncontrada_lancaException() {
+        // se passar isso o resto vai de boa
         when(reservaRepository.findById(99L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.processarEAprovar(99L, TipoPagamento.DEBITO, 1))
@@ -60,6 +61,7 @@ class PagamentoServiceTest {
     @Test
     @DisplayName("processarEAprovar lança exception quando já existe pagamento para a reserva (RN22)")
     void processarEAprovar_pagamentoJaExistente_lancaException() {
+        // bora testar esse cenario
         Reserva reserva = reservaComValorTotal(new BigDecimal("300.00"));
         when(reservaRepository.findById(1L)).thenReturn(Optional.of(reserva));
         when(pagamentoRepository.findByReserva_Id(1L)).thenReturn(Optional.of(new PagamentoDebito()));
@@ -72,6 +74,7 @@ class PagamentoServiceTest {
     @Test
     @DisplayName("processarEAprovar com DÉBITO força parcelas = 1 independente do valor informado (RN19)")
     void processarEAprovar_debito_forcaParcelas1() {
+        // mais uma checagem de rotina
         Reserva reserva = reservaComValorTotal(new BigDecimal("500.00"));
         PagamentoDebito pagamento = new PagamentoDebito();
         pagamento.setValorBruto(new BigDecimal("500.00"));
@@ -94,6 +97,7 @@ class PagamentoServiceTest {
     @Test
     @DisplayName("processarEAprovar com CRÉDITO instancia PagamentoCredito e registra auditoria")
     void processarEAprovar_credito_salvaEAudita() {
+        // so pra ter certeza que ta pegando o valor certo
         Reserva reserva = reservaComValorTotal(new BigDecimal("800.00"));
         PagamentoCredito pagamento = new PagamentoCredito();
         pagamento.setValorBruto(new BigDecimal("800.00"));
@@ -115,6 +119,7 @@ class PagamentoServiceTest {
     @Test
     @DisplayName("buscarPagamentoDaReserva retorna null quando não há pagamento")
     void buscarPagamentoDaReserva_semPagamento_retornaNull() {
+        // teste super importante
         when(pagamentoRepository.findByReserva_Id(1L)).thenReturn(Optional.empty());
 
         Pagamento resultado = service.buscarPagamentoDaReserva(1L);
@@ -125,6 +130,7 @@ class PagamentoServiceTest {
     @Test
     @DisplayName("buscarPagamentoDaReserva retorna o pagamento existente")
     void buscarPagamentoDaReserva_comPagamento_retornaPagamento() {
+        // so pra ter certeza que ta pegando o valor certo
         PagamentoCredito pag = new PagamentoCredito();
         when(pagamentoRepository.findByReserva_Id(1L)).thenReturn(Optional.of(pag));
 
@@ -138,6 +144,7 @@ class PagamentoServiceTest {
     @Test
     @DisplayName("buscarTicketDaReserva lança exception quando ticket ainda não foi emitido")
     void buscarTicketDaReserva_naoEmitido_lancaException() {
+        // verificando se ta tudo certo
         when(ticketRepository.findByReserva_Id(1L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.buscarTicketDaReserva(1L))
@@ -148,6 +155,7 @@ class PagamentoServiceTest {
     @Test
     @DisplayName("buscarTicketDaReserva retorna o ticket quando emitido")
     void buscarTicketDaReserva_emitido_retornaTicket() {
+        // garantindo que nao vai dar erro aqui
         Ticket ticket = new Ticket();
         when(ticketRepository.findByReserva_Id(5L)).thenReturn(Optional.of(ticket));
 
@@ -161,6 +169,7 @@ class PagamentoServiceTest {
     @Test
     @DisplayName("buscarTicket lança exception quando id de ticket não existe")
     void buscarTicket_naoEncontrado_lancaException() {
+        // garantindo a logica de negocio
         when(ticketRepository.findById(99L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.buscarTicket(99L))
@@ -171,6 +180,7 @@ class PagamentoServiceTest {
     @Test
     @DisplayName("buscarTicket retorna o ticket pelo id")
     void buscarTicket_encontrado_retornaTicket() {
+        // checando o comportamento esperado
         Ticket ticket = new Ticket();
         when(ticketRepository.findById(7L)).thenReturn(Optional.of(ticket));
 

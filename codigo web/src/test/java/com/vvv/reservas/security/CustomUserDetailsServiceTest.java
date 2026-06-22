@@ -28,6 +28,7 @@ class CustomUserDetailsServiceTest {
     @Test
     @DisplayName("loadUserByUsername lança UsernameNotFoundException quando e-mail não existe")
     void loadUserByUsername_naoEncontrado_lancaUsernameNotFoundException() {
+        // conferindo os valores retornados
         when(usuarioRepository.findByEmail("desconhecido@vvv.com")).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.loadUserByUsername("desconhecido@vvv.com"))
@@ -38,6 +39,7 @@ class CustomUserDetailsServiceTest {
     @Test
     @DisplayName("loadUserByUsername retorna UserDetails com autoridades ROLE_<perfil>")
     void loadUserByUsername_usuarioAtivo_retornaUserDetailsComAuthorities() {
+        // verificando se ta tudo certo
         Perfil perfil = perfil("FUNCIONARIO");
         Usuario u = usuario("func@vvv.com", "$2a$12$hash", true, Set.of(perfil));
 
@@ -55,6 +57,7 @@ class CustomUserDetailsServiceTest {
     @Test
     @DisplayName("loadUserByUsername retorna UserDetails desabilitado quando ativo=false")
     void loadUserByUsername_usuarioInativo_retornaDesabilitado() {
+        // mais uma checagem de rotina
         Usuario u = usuario("inativo@vvv.com", "$2a$12$hash", false, Set.of());
 
         when(usuarioRepository.findByEmail("inativo@vvv.com")).thenReturn(Optional.of(u));
@@ -67,6 +70,7 @@ class CustomUserDetailsServiceTest {
     @Test
     @DisplayName("loadUserByUsername mapeia múltiplos perfis corretamente")
     void loadUserByUsername_multiplosPeris_mapeiaTodos() {
+        // checando o comportamento esperado
         Perfil p1 = perfil("ADMIN");
         Perfil p2 = perfil("GERENTE_PDV");
         Usuario u = usuario("admin@vvv.com", "$2a$12$hash", true, Set.of(p1, p2));

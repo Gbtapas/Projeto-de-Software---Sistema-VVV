@@ -48,6 +48,34 @@
                                 <option th:each="t : ${tipos}" th:value="${t}" th:text="${t}"></option>
                             </select>
                         </div>
+
+                        <!-- Dados do Cartão -->
+                        <div class="card mb-3">
+                            <div class="card-header bg-light">
+                                Dados do Cartão
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="nomeCartao" class="form-label">Nome Impresso no Cartão</label>
+                                    <input type="text" th:field="*{nomeCartao}" id="nomeCartao" class="form-control" placeholder="Ex: JOAO A SILVA" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="numeroCartao" class="form-label">Número do Cartão</label>
+                                    <input type="text" th:field="*{numeroCartao}" id="numeroCartao" class="form-control" placeholder="0000 0000 0000 0000" maxlength="19" required>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6 mb-3">
+                                        <label for="validadeCartao" class="form-label">Validade</label>
+                                        <input type="text" th:field="*{validadeCartao}" id="validadeCartao" class="form-control" placeholder="MM/AA" maxlength="5" required>
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label for="cvvCartao" class="form-label">CVV</label>
+                                        <input type="text" th:field="*{cvvCartao}" id="cvvCartao" class="form-control" placeholder="123" maxlength="3" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="mb-3">
                             <label for="parcelas" class="form-label">Parcelas</label>
                             <select th:field="*{parcelas}" id="parcelas" class="form-select">
@@ -69,5 +97,62 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script th:src="@{/js/app.js}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const numeroCartao = document.getElementById('numeroCartao');
+        const validadeCartao = document.getElementById('validadeCartao');
+        const cvvCartao = document.getElementById('cvvCartao');
+
+        if (numeroCartao) {
+            numeroCartao.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, ''); // Remove tudo que não for dígito
+                if (value.length > 16) value = value.slice(0, 16);
+                e.target.value = value.replace(/(\d{4})(?=\d)/g, '$1 '); // Adiciona espaço a cada 4 dígitos
+            });
+        }
+
+        if (validadeCartao) {
+            validadeCartao.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 4) value = value.slice(0, 4);
+                if (value.length > 2) {
+                    value = value.slice(0, 2) + '/' + value.slice(2);
+                }
+                e.target.value = value;
+                validadeCartao.setCustomValidity(""); // Limpa o erro ao digitar
+            });
+
+            validadeCartao.addEventListener('blur', function(e) {
+                const value = e.target.value;
+                if (value.length === 5) {
+                    const month = parseInt(value.slice(0, 2), 10);
+                    const year = parseInt(value.slice(3, 5), 10) + 2000;
+                    const now = new Date();
+                    const currentMonth = now.getMonth() + 1;
+                    const currentYear = now.getFullYear();
+                    
+                    if (month < 1 || month > 12) {
+                        validadeCartao.setCustomValidity("Mês inválido");
+                    } else if (year < currentYear || (year === currentYear && month < currentMonth)) {
+                        validadeCartao.setCustomValidity("Cartão vencido");
+                    } else {
+                        validadeCartao.setCustomValidity("");
+                    }
+                } else if (value.length > 0) {
+                    validadeCartao.setCustomValidity("Formato deve ser MM/AA");
+                }
+                validadeCartao.reportValidity();
+            });
+        }
+
+        if (cvvCartao) {
+            cvvCartao.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 3) value = value.slice(0, 3);
+                e.target.value = value;
+            });
+        }
+    });
+</script>
 </body>
 </html>

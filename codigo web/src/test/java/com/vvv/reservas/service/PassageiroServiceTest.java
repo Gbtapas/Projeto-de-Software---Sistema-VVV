@@ -37,6 +37,7 @@ class PassageiroServiceTest {
     @Test
     @DisplayName("listarAtivos delega ao repositório e retorna a lista")
     void listarAtivos_retornaPassageirosAtivos() {
+        // garantindo a logica de negocio
         Passageiro p = passageiro("12345678901", "Ana Silva");
         when(passageiroRepository.findAllByAtivoTrueOrderByNomeAsc()).thenReturn(List.of(p));
 
@@ -51,6 +52,7 @@ class PassageiroServiceTest {
     @Test
     @DisplayName("buscar retorna passageiro quando encontrado")
     void buscar_passageiroEncontrado_retornaPassageiro() {
+        // mais uma checagem de rotina
         Passageiro p = passageiro("12345678901", "João Souza");
         when(passageiroRepository.findById(1L)).thenReturn(Optional.of(p));
 
@@ -62,6 +64,7 @@ class PassageiroServiceTest {
     @Test
     @DisplayName("buscar lança RegraNegocioException quando não encontrado")
     void buscar_passageiroNaoEncontrado_lancaException() {
+        // checando o comportamento esperado
         when(passageiroRepository.findById(99L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.buscar(99L))
@@ -74,6 +77,7 @@ class PassageiroServiceTest {
     @Test
     @DisplayName("cadastrar lança exceção quando CPF já existe")
     void cadastrar_cpfDuplicado_lancaException() {
+        // garantindo a logica de negocio
         PassageiroForm form = form("12345678901", "Maria");
         when(passageiroRepository.existsByCpf("12345678901")).thenReturn(true);
 
@@ -87,6 +91,7 @@ class PassageiroServiceTest {
     @Test
     @DisplayName("cadastrar salva passageiro com código gerado e registra auditoria")
     void cadastrar_cpfNovo_salvaNaBaseERegistraAuditoria() {
+        // teste super importante
         PassageiroForm form = form("98765432100", "Pedro Alves");
         Passageiro salvo = passageiro("98765432100", "Pedro Alves");
         when(passageiroRepository.existsByCpf("98765432100")).thenReturn(false);

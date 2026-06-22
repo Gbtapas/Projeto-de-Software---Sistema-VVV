@@ -45,6 +45,7 @@ class FuncionarioServiceTest {
     @Test
     @DisplayName("listar retorna apenas funcionários ativos ordenados por nome")
     void listar_delegaAoRepositorio() {
+        // bora testar esse cenario
         Funcionario f = funcionario("12345678901", "Ana Costa");
         when(funcionarioRepo.findAllByAtivoTrueOrderByNomeAsc()).thenReturn(List.of(f));
 
@@ -57,6 +58,7 @@ class FuncionarioServiceTest {
     @Test
     @DisplayName("listarTodos retorna todos os funcionários (ativos e inativos)")
     void listarTodos_delegaAoRepositorio() {
+        // so pra ter certeza que ta pegando o valor certo
         when(funcionarioRepo.findAll()).thenReturn(List.of(new Funcionario(), new Funcionario()));
 
         List<Funcionario> resultado = service.listarTodos();
@@ -69,6 +71,7 @@ class FuncionarioServiceTest {
     @Test
     @DisplayName("salvar lança exception quando CPF já cadastrado")
     void salvar_cpfDuplicado_lancaException() {
+        // verificando se ta tudo certo
         FuncionarioForm form = form("11111111111", "Carlos");
         form.setEmail("carlos@vvv.com");
         form.setSenha("senha123");
@@ -84,6 +87,7 @@ class FuncionarioServiceTest {
     @Test
     @DisplayName("salvar persiste funcionário com código gerado e registra auditoria")
     void salvar_cpfNovo_salvaNaBaseERegistraAuditoria() {
+        // checando o comportamento esperado
         FuncionarioForm form = form("22222222222", "Beatriz Lima");
         form.setEmail("beatriz@vvv.com");
         form.setSenha("senha123");
@@ -118,6 +122,7 @@ class FuncionarioServiceTest {
     @Test
     @DisplayName("desativar lança exception quando funcionário não encontrado")
     void desativar_naoEncontrado_lancaException() {
+        // bora testar esse cenario
         when(funcionarioRepo.findById(99L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.desativar(99L))
@@ -128,6 +133,7 @@ class FuncionarioServiceTest {
     @Test
     @DisplayName("desativar define ativo=false e registra auditoria")
     void desativar_sucesso_desativaEAudita() {
+        // conferindo os valores retornados
         Funcionario f = funcionario("33333333333", "Diego Ramos");
         when(funcionarioRepo.findById(1L)).thenReturn(Optional.of(f));
         when(funcionarioRepo.save(any())).thenReturn(f);

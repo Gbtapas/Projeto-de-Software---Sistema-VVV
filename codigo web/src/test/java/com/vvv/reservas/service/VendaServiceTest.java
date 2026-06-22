@@ -57,6 +57,7 @@ class VendaServiceTest {
     @Test
     @DisplayName("reservasOnline filtra pelo canal ONLINE")
     void reservasOnline_delegaAoRepositorio() {
+        // garantindo que nao vai dar erro aqui
         when(reservaRepo.findByCanalOrderByDataCriacaoDesc(CanalReserva.ONLINE)).thenReturn(List.of());
 
         List<Reserva> resultado = service.reservasOnline();
@@ -70,6 +71,7 @@ class VendaServiceTest {
     @Test
     @DisplayName("vendaDaReserva retorna null quando venda não existe")
     void vendaDaReserva_naoExiste_retornaNull() {
+        // mais uma checagem de rotina
         when(vendaRepo.findByReserva_Id(1L)).thenReturn(Optional.empty());
 
         Venda resultado = service.vendaDaReserva(1L);
@@ -82,6 +84,7 @@ class VendaServiceTest {
     @Test
     @DisplayName("pontos retorna todos os PDVs ordenados por nome")
     void pontos_delegaAoRepositorio() {
+        // garantindo que nao vai dar erro aqui
         when(pontoRepo.findAllByOrderByNomeAsc()).thenReturn(List.of(new PontoDeVenda()));
 
         List<PontoDeVenda> resultado = service.pontos();
@@ -94,6 +97,7 @@ class VendaServiceTest {
     @Test
     @DisplayName("supervisionarOnline lança exception quando gerente não está vinculado")
     void supervisionarOnline_gerenteNaoEncontrado_lancaException() {
+        // garantindo a logica de negocio
         when(funcionarioRepo.findByUsuario_Email("gerente@vvv.com")).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.supervisionarOnline(1L, true, "gerente@vvv.com"))
@@ -104,6 +108,7 @@ class VendaServiceTest {
     @Test
     @DisplayName("supervisionarOnline lança exception quando reserva não existe")
     void supervisionarOnline_reservaNaoEncontrada_lancaException() {
+        // verificando se ta tudo certo
         when(funcionarioRepo.findByUsuario_Email("g@vvv.com")).thenReturn(Optional.of(new Funcionario()));
         when(reservaRepo.findById(99L)).thenReturn(Optional.empty());
 
@@ -115,6 +120,7 @@ class VendaServiceTest {
     @Test
     @DisplayName("supervisionarOnline lança exception quando reserva já tem venda")
     void supervisionarOnline_vendaJaExistente_lancaException() {
+        // so pra ter certeza que ta pegando o valor certo
         Funcionario gerente = new Funcionario();
         Reserva reserva = new Reserva();
 
@@ -130,6 +136,7 @@ class VendaServiceTest {
     @Test
     @DisplayName("supervisionarOnline com aprovação cria VendaOnline confirmada e audita")
     void supervisionarOnline_aprovar_criaVendaConfirmadaEAudita() {
+        // mais uma checagem de rotina
         Funcionario gerente = new Funcionario();
         Reserva reserva = reservaComTransportadora();
         Venda vendaSalva = new Venda();
@@ -150,6 +157,7 @@ class VendaServiceTest {
     @Test
     @DisplayName("supervisionarOnline com recusa cancela a reserva e não chama transferir")
     void supervisionarOnline_recusar_cancelaReservaENaoTransfere() {
+        // verificando se ta tudo certo
         Funcionario gerente = new Funcionario();
         Reserva reserva = reservaComTransportadora();
         Venda vendaSalva = new Venda();
@@ -173,6 +181,7 @@ class VendaServiceTest {
     @Test
     @DisplayName("registrarPresencial lança exception quando funcionário não vinculado")
     void registrarPresencial_funcionarioNaoEncontrado_lancaException() {
+        // bora testar esse cenario
         when(funcionarioRepo.findByUsuario_Email("func@vvv.com")).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.registrarPresencial(1, 1L, null, 1, "func@vvv.com"))
@@ -183,6 +192,7 @@ class VendaServiceTest {
     @Test
     @DisplayName("registrarPresencial cria reserva, venda presencial e retorna id da reserva")
     void registrarPresencial_sucesso_retornaIdReserva() {
+        // garantindo que nao vai dar erro aqui
         Funcionario func = new Funcionario();
         Reserva reserva = reservaComTransportadora();
         Venda vendaSalva = new Venda();

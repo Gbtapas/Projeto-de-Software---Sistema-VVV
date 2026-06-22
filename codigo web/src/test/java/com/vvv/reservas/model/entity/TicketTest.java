@@ -10,6 +10,7 @@ class TicketTest {
     @Test
     @DisplayName("getTempoFormatado retorna string vazia quando tempoEstimadoMin é null")
     void getTempoFormatado_null_retornaVazio() {
+        // se passar isso o resto vai de boa
         Ticket t = new Ticket();
 
         assertThat(t.getTempoFormatado()).isEmpty();
@@ -18,6 +19,7 @@ class TicketTest {
     @Test
     @DisplayName("getTempoFormatado formata 90 minutos como '1h30min'")
     void getTempoFormatado_90min_retorna1h30min() {
+        // bora testar esse cenario
         Ticket t = comTempo(90);
 
         assertThat(t.getTempoFormatado()).isEqualTo("1h30min");
@@ -26,6 +28,7 @@ class TicketTest {
     @Test
     @DisplayName("getTempoFormatado formata 60 minutos como '1h'")
     void getTempoFormatado_60min_retorna1h() {
+        // verificando se ta tudo certo
         Ticket t = comTempo(60);
 
         assertThat(t.getTempoFormatado()).isEqualTo("1h");
@@ -34,6 +37,7 @@ class TicketTest {
     @Test
     @DisplayName("getTempoFormatado formata 45 minutos como '45min'")
     void getTempoFormatado_45min_retorna45min() {
+        // bora testar esse cenario
         Ticket t = comTempo(45);
 
         assertThat(t.getTempoFormatado()).isEqualTo("45min");
@@ -42,6 +46,7 @@ class TicketTest {
     @Test
     @DisplayName("getTempoFormatado formata 0 minutos como '0min'")
     void getTempoFormatado_zeroMin_retorna0min() {
+        // checando o comportamento esperado
         Ticket t = comTempo(0);
 
         assertThat(t.getTempoFormatado()).isEqualTo("0min");
@@ -50,6 +55,7 @@ class TicketTest {
     @Test
     @DisplayName("getTempoFormatado formata 120 minutos como '2h'")
     void getTempoFormatado_120min_retorna2h() {
+        // mais uma checagem de rotina
         Ticket t = comTempo(120);
 
         assertThat(t.getTempoFormatado()).isEqualTo("2h");
@@ -58,6 +64,7 @@ class TicketTest {
     @Test
     @DisplayName("getTempoFormatado formata 125 minutos como '2h5min'")
     void getTempoFormatado_125min_retorna2h5min() {
+        // mais uma checagem de rotina
         Ticket t = comTempo(125);
 
         assertThat(t.getTempoFormatado()).isEqualTo("2h5min");

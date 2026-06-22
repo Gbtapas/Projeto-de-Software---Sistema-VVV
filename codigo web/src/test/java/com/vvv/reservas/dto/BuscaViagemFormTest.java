@@ -12,6 +12,7 @@ class BuscaViagemFormTest {
     @Test
     @DisplayName("getOrigem converte texto em maiúsculas e remove espaços")
     void getOrigem_textoMinusculo_retornaMaiusculo() {
+        // garantindo que nao vai dar erro aqui
         BuscaViagemForm form = new BuscaViagemForm();
         form.setOrigem("  gru  ");
 
@@ -21,6 +22,7 @@ class BuscaViagemFormTest {
     @Test
     @DisplayName("getOrigem retorna null quando origem é nula")
     void getOrigem_null_retornaNull() {
+        // conferindo os valores retornados
         BuscaViagemForm form = new BuscaViagemForm();
         form.setOrigem(null);
 
@@ -30,6 +32,7 @@ class BuscaViagemFormTest {
     @Test
     @DisplayName("getOrigem retorna null quando origem está em branco")
     void getOrigem_branco_retornaNull() {
+        // garantindo que nao vai dar erro aqui
         BuscaViagemForm form = new BuscaViagemForm();
         form.setOrigem("   ");
 
@@ -39,6 +42,7 @@ class BuscaViagemFormTest {
     @Test
     @DisplayName("getDestino converte texto em maiúsculas")
     void getDestino_textoMinusculo_retornaMaiusculo() {
+        // garantindo a logica de negocio
         BuscaViagemForm form = new BuscaViagemForm();
         form.setDestino("sao");
 
@@ -48,6 +52,7 @@ class BuscaViagemFormTest {
     @Test
     @DisplayName("getData retorna a data exatamente como foi definida")
     void getData_retornaDataDefinida() {
+        // conferindo os valores retornados
         BuscaViagemForm form = new BuscaViagemForm();
         LocalDate data = LocalDate.of(2026, 8, 20);
         form.setData(data);
