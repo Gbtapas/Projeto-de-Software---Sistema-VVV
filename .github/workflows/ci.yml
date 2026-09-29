@@ -26,7 +26,9 @@ jobs:
           cache-dependency-path: app/pom.xml
       - name: Run unit tests
         working-directory: app
-        run: ./mvnw -B test
+        run: |
+          chmod +x mvnw
+          ./mvnw -B test
 
   integration-tests:
     name: Integration tests
@@ -41,7 +43,9 @@ jobs:
           cache-dependency-path: app/pom.xml
       - name: Run integration tests
         working-directory: app
-        run: ./mvnw -B -DskipUnitTests=true verify
+        run: |
+          chmod +x mvnw
+          ./mvnw -B -DskipUnitTests=true verify
 
   sonar:
     name: SonarCloud analysis
@@ -59,10 +63,14 @@ jobs:
           cache-dependency-path: app/pom.xml
       - name: Generate coverage report
         working-directory: app
-        run: ./mvnw -B test
+        run: |
+          chmod +x mvnw
+          ./mvnw -B test
       - name: Run SonarCloud scan
         working-directory: app
-        run: ./mvnw -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+        run: |
+          chmod +x mvnw
+          ./mvnw -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
 
   docker-build:
     name: Docker image build
