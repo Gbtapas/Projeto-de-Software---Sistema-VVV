@@ -1,6 +1,6 @@
 # Vai & Volta Viagens
 
-Aplicação web de reservas de viagens construída com Java 21, Spring Boot, Maven e MySQL 8.
+Aplicação web de reservas de viagens construída com Java 21, Spring Boot, Maven e MySQL 8. Versão atual: `1.0.0`.
 
 ## Estrutura
 
