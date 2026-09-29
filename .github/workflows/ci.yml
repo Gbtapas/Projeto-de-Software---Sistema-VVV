@@ -9,9 +9,6 @@ on:
 permissions:
   contents: read
 
-env:
-  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
 jobs:
   unit-tests:
     name: Unit tests
@@ -51,6 +48,8 @@ jobs:
     name: SonarCloud analysis
     needs: [unit-tests, integration-tests]
     runs-on: ubuntu-latest
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     steps:
       - uses: actions/checkout@v5
         with:
@@ -61,6 +60,16 @@ jobs:
           java-version: "21"
           cache: maven
           cache-dependency-path: app/pom.xml
+      - name: Validate SonarCloud credentials
+        run: |
+          if [ -z "$SONAR_TOKEN" ]; then
+            echo "::error::O segredo SONAR_TOKEN nao foi disponibilizado ao workflow."
+            exit 1
+          fi
+          if ! curl --fail --silent --show-error --user "${SONAR_TOKEN}:" https://sonarcloud.io/api/authentication/validate | grep -q '"valid":true'; then
+            echo "::error::O token do SonarCloud nao foi aceito. Gere outro token e atualize o segredo SONAR_TOKEN."
+            exit 1
+          fi
       - name: Generate coverage report
         working-directory: app
         run: |
@@ -70,7 +79,7 @@ jobs:
         working-directory: app
         run: |
           chmod +x mvnw
-          ./mvnw -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+          ./mvnw -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.token="${SONAR_TOKEN}"
 
   docker-build:
     name: Docker image build
