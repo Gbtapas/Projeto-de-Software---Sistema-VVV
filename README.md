@@ -13,6 +13,16 @@ Aplicação web de reservas de viagens construída com Java 21, Spring Boot, Mav
 
 Copie `.env.example` para `.env` e ajuste os valores de banco de dados para seu ambiente. A aplicação usa as variáveis `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USERNAME` e `DB_PASSWORD`; valores de desenvolvimento local são usados quando uma variável não é definida.
 
+## Docker
+
+Com Docker Desktop em execução, inicie a aplicação e o MySQL com:
+
+```powershell
+docker compose --env-file .env.example up --build
+```
+
+A aplicação estará em `http://localhost:8080`. Para interromper os serviços, use `docker compose down`; para remover também os dados locais, use `docker compose down -v`.
+
 ## Testes
 
 Na pasta `app`, execute:
@@ -21,7 +31,11 @@ Na pasta `app`, execute:
 .\mvnw.cmd test
 ```
 
-Os testes unitários não exigem banco de dados. Os testes de integração e a execução completa serão disponibilizados com Docker e Maven na próxima etapa da refatoração.
+Os testes unitários não exigem banco de dados. O teste de integração sobe o contexto completo da aplicação com um banco H2 isolado:
+
+```powershell
+.\mvnw.cmd verify
+```
 
 ## Fluxo Git
 
