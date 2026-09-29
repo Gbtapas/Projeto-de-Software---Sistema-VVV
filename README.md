@@ -51,3 +51,26 @@ O workflow `.github/workflows/ci.yml` executa em pushes e Pull Requests:
 - análise SonarCloud, quando configurada.
 
 Para ativar o SonarCloud, importe este repositório na organização `tipilegal` do SonarCloud e crie o secret de Actions `SONAR_TOKEN` com o token gerado pela plataforma. O pipeline detecta esse secret e executa a análise automaticamente; o token nunca é armazenado no repositório.
+
+## Publicação no Railway
+
+O arquivo `railway.toml` instrui o Railway a usar o `Dockerfile` da raiz. Para publicar:
+
+1. Crie um projeto no Railway e adicione um serviço MySQL.
+2. Adicione este repositório como serviço de aplicação e mantenha o diretório-raiz como contexto de build.
+3. Configure as variáveis abaixo na aplicação, usando referências ao serviço MySQL criado:
+
+| Variável da aplicação | Referência Railway |
+| --- | --- |
+| `DB_HOST` | `${{MySQL.MYSQLHOST}}` |
+| `DB_PORT` | `${{MySQL.MYSQLPORT}}` |
+| `DB_NAME` | `${{MySQL.MYSQLDATABASE}}` |
+| `DB_USERNAME` | `${{MySQL.MYSQLUSER}}` |
+| `DB_PASSWORD` | `${{MySQL.MYSQLPASSWORD}}` |
+| `SERVER_PORT` | `${{PORT}}` |
+| `SHOW_SQL` | `false` |
+
+4. Execute uma única vez os scripts de `database/init/` no MySQL, respeitando a ordem descrita em `database/README.md`.
+5. Gere um domínio público no serviço de aplicação e confira a rota `/`.
+
+O nome `MySQL` nas referências deve coincidir com o nome do serviço de banco no Railway.
