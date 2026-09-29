@@ -32,7 +32,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<skipUnitTests>false</skipUnitTests>
 		<sonar.projectKey>tipilegal_Projeto-de-Software---Sistema-VVV</sonar.projectKey>
-		<sonar.organization>tipilegal</sonar.organization>
+		<sonar.organization>tipilegal1</sonar.organization>
 		<sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 	</properties>
 	<dependencies>
