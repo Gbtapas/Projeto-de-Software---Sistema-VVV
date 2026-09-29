@@ -16,6 +16,7 @@ WORKDIR /app
 RUN useradd --system --uid 1001 spring
 
 COPY --from=build /workspace/target/*.jar app.jar
+RUN mkdir -p logs && chown -R spring:spring /app
 
 USER spring
 EXPOSE 8080
