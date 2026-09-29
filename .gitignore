@@ -1,0 +1,28 @@
+# Build artifacts
+**/target/
+**/build/
+.m2/
+
+# Runtime logs
+**/logs/
+*.log
+*.log.gz
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+
+# Operating system files
+.DS_Store
+Thumbs.db
