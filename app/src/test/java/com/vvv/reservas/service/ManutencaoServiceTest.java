@@ -57,8 +57,8 @@ class ManutencaoServiceTest {
     @DisplayName("agendar salva manutenção e registra auditoria e notificação")
     void agendar_sucesso_salvaAuditaENotifica() throws Exception {
         // teste super importante
-        LocalDate inicio = LocalDate.of(2026, 7, 1);
-        LocalDate fim    = LocalDate.of(2026, 7, 10);
+        LocalDate inicio = LocalDate.now().plusDays(1);
+        LocalDate fim = inicio.plusDays(9);
 
         Transportadora transportadora = new Transportadora();
         Modal modal = new Modal();
